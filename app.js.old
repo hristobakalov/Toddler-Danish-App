@@ -68,6 +68,224 @@ function init() {
 
     // Setup navigation
     setupNavigation();
+
+    // Setup color game
+    setupColorGame();
+}
+
+// Color Game State
+let currentColorQuestion = null;
+let isGameActive = false;
+
+// Setup Color Game
+function setupColorGame() {
+    const startBtn = document.getElementById('startColorGameBtn');
+    const exitBtn = document.getElementById('exitGameBtn');
+
+    startBtn.addEventListener('click', startColorGame);
+    exitBtn.addEventListener('click', exitColorGame);
+}
+
+// Start Color Game
+function startColorGame() {
+    isGameActive = true;
+
+    // Hide free play mode
+    document.getElementById('colorsFreePlay').style.display = 'none';
+    document.getElementById('colorsQuizMode').style.display = 'block';
+
+    // Start countdown
+    startCountdown();
+}
+
+// Exit Color Game
+function exitColorGame() {
+    isGameActive = false;
+
+    // Show free play mode
+    document.getElementById('colorsFreePlay').style.display = 'block';
+    document.getElementById('colorsQuizMode').style.display = 'none';
+    document.getElementById('quizInterface').style.display = 'none';
+}
+
+// Countdown: 3, 2, 1, Go!
+function startCountdown() {
+    const countdown = document.getElementById('countdown');
+    const countdownNumber = countdown.querySelector('.countdown-number');
+
+    countdown.style.display = 'flex';
+
+    const sequence = ['3', '2', '1', 'Go!'];
+    let index = 0;
+
+    function showNext() {
+        if (index < sequence.length) {
+            countdownNumber.textContent = sequence[index];
+            countdownNumber.style.animation = 'none';
+            setTimeout(() => {
+                countdownNumber.style.animation = 'countdownPulse 1s ease-in-out';
+            }, 10);
+
+            // Speak the countdown
+            if (sequence[index] === 'Go!') {
+                speakText('Go');
+            } else {
+                speakText(sequence[index]);
+            }
+
+            index++;
+            setTimeout(showNext, 1000);
+        } else {
+            countdown.style.display = 'none';
+            startQuizRound();
+        }
+    }
+
+    showNext();
+}
+
+// Start a quiz round
+function startQuizRound() {
+    document.getElementById('quizInterface').style.display = 'block';
+
+    // Pick a random color as the correct answer
+    currentColorQuestion = danishColors[Math.floor(Math.random() * danishColors.length)];
+
+    // Display the color name
+    const colorNameEl = document.getElementById('quizColorName');
+    colorNameEl.textContent = currentColorQuestion.name;
+
+    // Speak the color name
+    setTimeout(() => {
+        speakText(currentColorQuestion.name);
+    }, 300);
+
+    // Generate 4 options (including correct answer)
+    const options = generateColorOptions(currentColorQuestion);
+
+    // Display options
+    displayColorOptions(options);
+}
+
+// Generate 4 color options
+function generateColorOptions(correctColor) {
+    const options = [correctColor];
+
+    // Add 3 random different colors
+    while (options.length < 4) {
+        const randomColor = danishColors[Math.floor(Math.random() * danishColors.length)];
+        if (!options.includes(randomColor)) {
+            options.push(randomColor);
+        }
+    }
+
+    // Shuffle options
+    return options.sort(() => Math.random() - 0.5);
+}
+
+// Display color options in 2x2 grid
+function displayColorOptions(options) {
+    const container = document.getElementById('quizOptions');
+    container.innerHTML = '';
+
+    options.forEach(option => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'quiz-option';
+        optionDiv.style.backgroundColor = option.color;
+
+        // Add border for white color
+        if (option.name === 'Hvid') {
+            optionDiv.style.border = '6px solid #ddd';
+        }
+
+        // Add emoji
+        const emoji = document.createElement('span');
+        emoji.textContent = option.emoji;
+        optionDiv.appendChild(emoji);
+
+        // Click handler
+        optionDiv.addEventListener('click', () => handleColorSelection(optionDiv, option));
+
+        container.appendChild(optionDiv);
+    });
+}
+
+// Handle color selection
+function handleColorSelection(element, selectedColor) {
+    // Prevent multiple clicks
+    const allOptions = document.querySelectorAll('.quiz-option');
+    allOptions.forEach(opt => opt.style.pointerEvents = 'none');
+
+    if (selectedColor.name === currentColorQuestion.name) {
+        // Correct answer
+        element.classList.add('correct');
+        showFeedback('👍', '#4CAF50');
+
+        // Wait then start new round
+        setTimeout(() => {
+            if (isGameActive) {
+                startQuizRound();
+            }
+        }, 2000);
+    } else {
+        // Incorrect answer
+        element.classList.add('incorrect');
+
+        // Find and highlight correct answer
+        allOptions.forEach(opt => {
+            const optColor = opt.style.backgroundColor;
+            if (rgbToHex(optColor) === currentColorQuestion.color.toUpperCase()) {
+                setTimeout(() => {
+                    opt.classList.add('correct');
+                }, 300);
+            }
+        });
+
+        showFeedback('👎', '#f44336');
+
+        // Say the correct color again
+        setTimeout(() => {
+            speakText(currentColorQuestion.name);
+        }, 800);
+
+        // Wait then start new round
+        setTimeout(() => {
+            if (isGameActive) {
+                startQuizRound();
+            }
+        }, 3000);
+    }
+}
+
+// Show feedback overlay
+function showFeedback(icon, color) {
+    const overlay = document.getElementById('feedbackOverlay');
+    const iconEl = overlay.querySelector('.feedback-icon');
+
+    iconEl.textContent = icon;
+    iconEl.style.color = color;
+    overlay.style.display = 'block';
+
+    iconEl.style.animation = 'none';
+    setTimeout(() => {
+        iconEl.style.animation = 'feedbackPop 0.8s ease';
+    }, 10);
+
+    setTimeout(() => {
+        overlay.style.display = 'none';
+    }, 800);
+}
+
+// Convert RGB to Hex
+function rgbToHex(rgb) {
+    const values = rgb.match(/\d+/g);
+    if (!values) return rgb;
+
+    const r = parseInt(values[0]).toString(16).padStart(2, '0');
+    const g = parseInt(values[1]).toString(16).padStart(2, '0');
+    const b = parseInt(values[2]).toString(16).padStart(2, '0');
+
+    return `#${r}${g}${b}`.toUpperCase();
 }
 
 // Setup navigation between games
