@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dansk-alfabet-v4';
+const CACHE_NAME = 'dansk-alfabet-v7';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -8,8 +8,10 @@ const urlsToCache = [
   '/js/game-manager.js',
   '/js/games/alphabet-game.js',
   '/js/games/colors-game.js',
+  '/js/games/numbers-game.js',
   '/js/data/alphabet-data.js',
   '/js/data/colors-data.js',
+  '/js/data/numbers-data.js',
   '/js/utils/speech.js',
   '/js/utils/animations.js'
 ];

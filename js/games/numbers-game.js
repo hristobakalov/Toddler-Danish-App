@@ -1,14 +1,14 @@
-import { danishColors } from '../data/colors-data.js';
+import { danishNumbers } from '../data/numbers-data.js';
 import { SpeechManager } from '../utils/speech.js';
 import { AnimationManager } from '../utils/animations.js';
 
-export class ColorsGame {
+export class NumbersGame {
     constructor(freePlayContainerId, quizContainerId) {
         this.freePlayContainer = document.getElementById(freePlayContainerId);
         this.quizContainer = document.getElementById(quizContainerId);
         this.speechManager = new SpeechManager();
 
-        this.currentColorQuestion = null;
+        this.currentNumberQuestion = null;
         this.isGameActive = false;
     }
 
@@ -18,42 +18,37 @@ export class ColorsGame {
     }
 
     renderFreePlay() {
-        const grid = this.freePlayContainer.querySelector('.colors-grid');
+        const grid = this.freePlayContainer.querySelector('.numbers-grid');
         grid.innerHTML = '';
 
-        danishColors.forEach((item, index) => {
-            const card = this.createColorCard(item, index);
+        danishNumbers.forEach((item, index) => {
+            const card = this.createNumberCard(item, index);
             grid.appendChild(card);
         });
     }
 
-    createColorCard(item, index) {
+    createNumberCard(item, index) {
         const card = document.createElement('div');
-        card.className = 'color-card';
+        card.className = 'number-card';
         card.dataset.index = index;
 
-        // Color display box
-        const colorDisplay = document.createElement('div');
-        colorDisplay.className = 'color-display';
-        colorDisplay.style.backgroundColor = item.color;
+        // Number display box
+        const numberDisplay = document.createElement('div');
+        numberDisplay.className = 'number-display';
 
-        // Add border for white color visibility
-        if (item.name === 'Hvid') {
-            colorDisplay.style.border = '3px solid #ddd';
-        }
-
-        // Add emoji to color display
+        // Add emoji to number display
         const emojiSpan = document.createElement('span');
+        emojiSpan.className = 'number-emoji';
         emojiSpan.textContent = item.emoji;
-        colorDisplay.appendChild(emojiSpan);
+        numberDisplay.appendChild(emojiSpan);
 
-        // Color name
-        const colorName = document.createElement('h2');
-        colorName.className = 'color-name';
-        colorName.textContent = item.name;
+        // Number name
+        const numberName = document.createElement('h2');
+        numberName.className = 'number-name';
+        numberName.textContent = item.name;
 
-        card.appendChild(colorDisplay);
-        card.appendChild(colorName);
+        card.appendChild(numberDisplay);
+        card.appendChild(numberName);
 
         // Card click handler
         card.addEventListener('click', () => {
@@ -65,8 +60,8 @@ export class ColorsGame {
     }
 
     setupGameControls() {
-        const startBtn = document.getElementById('startColorGameBtn');
-        const exitBtn = document.getElementById('exitGameBtn');
+        const startBtn = document.getElementById('startNumberGameBtn');
+        const exitBtn = document.getElementById('exitNumberGameBtn');
 
         if (startBtn) {
             startBtn.addEventListener('click', () => this.startGame());
@@ -81,8 +76,8 @@ export class ColorsGame {
         this.isGameActive = true;
 
         // Hide free play mode
-        document.getElementById('colorsFreePlay').style.display = 'none';
-        document.getElementById('colorsQuizMode').style.display = 'block';
+        document.getElementById('numbersFreePlay').style.display = 'none';
+        document.getElementById('numbersQuizMode').style.display = 'block';
 
         // Start countdown
         this.startCountdown();
@@ -92,13 +87,13 @@ export class ColorsGame {
         this.isGameActive = false;
 
         // Show free play mode
-        document.getElementById('colorsFreePlay').style.display = 'block';
-        document.getElementById('colorsQuizMode').style.display = 'none';
-        document.getElementById('quizInterface').style.display = 'none';
+        document.getElementById('numbersFreePlay').style.display = 'block';
+        document.getElementById('numbersQuizMode').style.display = 'none';
+        document.getElementById('numbersQuizInterface').style.display = 'none';
     }
 
     startCountdown() {
-        const countdown = document.getElementById('countdown');
+        const countdown = document.getElementById('numbersCountdown');
         const countdownNumber = countdown.querySelector('.countdown-number');
 
         countdown.style.display = 'flex';
@@ -133,32 +128,32 @@ export class ColorsGame {
     }
 
     startQuizRound() {
-        document.getElementById('quizInterface').style.display = 'block';
+        document.getElementById('numbersQuizInterface').style.display = 'block';
 
-        // Pick a random color as the correct answer
-        this.currentColorQuestion = danishColors[Math.floor(Math.random() * danishColors.length)];
+        // Pick a random number as the correct answer
+        this.currentNumberQuestion = danishNumbers[Math.floor(Math.random() * danishNumbers.length)];
 
-        // Display the color name
-        const colorNameEl = document.getElementById('quizColorName');
-        colorNameEl.textContent = this.currentColorQuestion.name;
+        // Display the number name
+        const numberNameEl = document.getElementById('quizNumberName');
+        numberNameEl.textContent = this.currentNumberQuestion.name;
 
         // Setup repeat button
         this.setupRepeatButton();
 
-        // Speak the color name
+        // Speak the number name
         setTimeout(() => {
-            this.speechManager.speak(this.currentColorQuestion.name);
+            this.speechManager.speak(this.currentNumberQuestion.name);
         }, 300);
 
         // Generate 4 options (including correct answer)
-        const options = this.generateColorOptions(this.currentColorQuestion);
+        const options = this.generateNumberOptions(this.currentNumberQuestion);
 
         // Display options
-        this.displayColorOptions(options);
+        this.displayNumberOptions(options);
     }
 
     setupRepeatButton() {
-        const repeatBtn = document.getElementById('repeatColorBtn');
+        const repeatBtn = document.getElementById('repeatNumberBtn');
 
         // Remove old listener to avoid duplicates
         const newBtn = repeatBtn.cloneNode(true);
@@ -166,7 +161,7 @@ export class ColorsGame {
 
         // Add click listener
         newBtn.addEventListener('click', () => {
-            this.speechManager.speak(this.currentColorQuestion.name);
+            this.speechManager.speak(this.currentNumberQuestion.name);
 
             // Visual feedback
             newBtn.style.animation = 'none';
@@ -176,14 +171,14 @@ export class ColorsGame {
         });
     }
 
-    generateColorOptions(correctColor) {
-        const options = [correctColor];
+    generateNumberOptions(correctNumber) {
+        const options = [correctNumber];
 
-        // Add 3 random different colors
+        // Add 3 random different numbers
         while (options.length < 4) {
-            const randomColor = danishColors[Math.floor(Math.random() * danishColors.length)];
-            if (!options.includes(randomColor)) {
-                options.push(randomColor);
+            const randomNumber = danishNumbers[Math.floor(Math.random() * danishNumbers.length)];
+            if (!options.includes(randomNumber)) {
+                options.push(randomNumber);
             }
         }
 
@@ -191,38 +186,33 @@ export class ColorsGame {
         return options.sort(() => Math.random() - 0.5);
     }
 
-    displayColorOptions(options) {
-        const container = document.getElementById('quizOptions');
+    displayNumberOptions(options) {
+        const container = document.getElementById('numbersQuizOptions');
         container.innerHTML = '';
 
         options.forEach(option => {
             const optionDiv = document.createElement('div');
-            optionDiv.className = 'quiz-option';
-            optionDiv.style.backgroundColor = option.color;
-
-            // Add border for white color
-            if (option.name === 'Hvid') {
-                optionDiv.style.border = '6px solid #ddd';
-            }
+            optionDiv.className = 'quiz-option number-quiz-option';
 
             // Add emoji
             const emoji = document.createElement('span');
             emoji.textContent = option.emoji;
+            emoji.style.fontSize = '5rem';
             optionDiv.appendChild(emoji);
 
             // Click handler
-            optionDiv.addEventListener('click', () => this.handleColorSelection(optionDiv, option));
+            optionDiv.addEventListener('click', () => this.handleNumberSelection(optionDiv, option));
 
             container.appendChild(optionDiv);
         });
     }
 
-    handleColorSelection(element, selectedColor) {
+    handleNumberSelection(element, selectedNumber) {
         // Prevent multiple clicks
-        const allOptions = document.querySelectorAll('.quiz-option');
+        const allOptions = document.querySelectorAll('.number-quiz-option');
         allOptions.forEach(opt => opt.style.pointerEvents = 'none');
 
-        if (selectedColor.name === this.currentColorQuestion.name) {
+        if (selectedNumber.number === this.currentNumberQuestion.number) {
             // Correct answer
             element.classList.add('correct');
             AnimationManager.showFeedback('👍', '#4CAF50');
@@ -239,8 +229,8 @@ export class ColorsGame {
 
             // Find and highlight correct answer
             allOptions.forEach(opt => {
-                const optColor = opt.style.backgroundColor;
-                if (this.rgbToHex(optColor) === this.currentColorQuestion.color.toUpperCase()) {
+                const optEmoji = opt.textContent.trim();
+                if (optEmoji === this.currentNumberQuestion.emoji) {
                     setTimeout(() => {
                         opt.classList.add('correct');
                     }, 300);
@@ -249,9 +239,9 @@ export class ColorsGame {
 
             AnimationManager.showFeedback('👎', '#f44336');
 
-            // Say the correct color again
+            // Say the correct number again
             setTimeout(() => {
-                this.speechManager.speak(this.currentColorQuestion.name);
+                this.speechManager.speak(this.currentNumberQuestion.name);
             }, 800);
 
             // Wait then start new round
@@ -263,19 +253,8 @@ export class ColorsGame {
         }
     }
 
-    rgbToHex(rgb) {
-        const values = rgb.match(/\d+/g);
-        if (!values) return rgb;
-
-        const r = parseInt(values[0]).toString(16).padStart(2, '0');
-        const g = parseInt(values[1]).toString(16).padStart(2, '0');
-        const b = parseInt(values[2]).toString(16).padStart(2, '0');
-
-        return `#${r}${g}${b}`.toUpperCase();
-    }
-
     destroy() {
         this.isGameActive = false;
-        this.freePlayContainer.querySelector('.colors-grid').innerHTML = '';
+        this.freePlayContainer.querySelector('.numbers-grid').innerHTML = '';
     }
 }
