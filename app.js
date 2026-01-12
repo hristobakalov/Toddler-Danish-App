@@ -1,152 +1,38 @@
-// Danish alphabet data with words
+// Danish alphabet data with words and emojis
 const danishAlphabet = [
-    { letter: 'A', words: ['Abe', 'Avis'] },
-    { letter: 'B', words: ['Bjørn', 'Brød'] },
-    { letter: 'C', words: ['Cikade', 'Cykel'] },
-    { letter: 'D', words: ['Delfin', 'Dør'] },
-    { letter: 'E', words: ['Egern', 'Elev'] },
-    { letter: 'F', words: ['Fisk', 'Fod'] },
-    { letter: 'G', words: ['Giraf', 'Glas'] },
-    { letter: 'H', words: ['Hund', 'Hus'] },
-    { letter: 'I', words: ['Ildflue', 'Is'] },
-    { letter: 'J', words: ['Jaguar', 'Jakke'] },
-    { letter: 'K', words: ['Kat', 'Kaffe'] },
-    { letter: 'L', words: ['Løve', 'Lampe'] },
-    { letter: 'M', words: ['Mus', 'Mælk'] },
-    { letter: 'N', words: ['Næsehorn', 'Nøgle'] },
-    { letter: 'O', words: ['Ørn', 'Oste'] },
-    { letter: 'P', words: ['Pingvin', 'Penge'] },
-    { letter: 'Q', words: ['Quokka', 'Quiz'] },
-    { letter: 'R', words: ['Ræv', 'Regn'] },
-    { letter: 'S', words: ['Slange', 'Sko'] },
-    { letter: 'T', words: ['Tiger', 'Tog'] },
-    { letter: 'U', words: ['Ugle', 'Ur'] },
-    { letter: 'V', words: ['Vildsvin', 'Vand'] },
-    { letter: 'W', words: ['Wombat', 'Weekend'] },
-    { letter: 'X', words: ['Xerus', 'Xylofon'] },
-    { letter: 'Y', words: ['Yak', 'Yoghurt'] },
-    { letter: 'Z', words: ['Zebra', 'Zone'] },
-    { letter: 'Æ', words: ['Æsel', 'Æble'] },
-    { letter: 'Ø', words: ['Ørred', 'Øl'] },
-    { letter: 'Å', words: ['Ål', 'Åben'] }
+    { letter: 'A', words: [{ text: 'Abe', emoji: '🐵' }, { text: 'Avis', emoji: '📰' }] },
+    { letter: 'B', words: [{ text: 'Bjørn', emoji: '🐻' }, { text: 'Brød', emoji: '🍞' }] },
+    { letter: 'C', words: [{ text: 'Cikade', emoji: '🦗' }, { text: 'Cykel', emoji: '🚲' }] },
+    { letter: 'D', words: [{ text: 'Delfin', emoji: '🐬' }, { text: 'Dør', emoji: '🚪' }] },
+    { letter: 'E', words: [{ text: 'Egern', emoji: '🐿️' }, { text: 'Elev', emoji: '👨‍🎓' }] },
+    { letter: 'F', words: [{ text: 'Fisk', emoji: '🐟' }, { text: 'Fod', emoji: '🦶' }] },
+    { letter: 'G', words: [{ text: 'Giraf', emoji: '🦒' }, { text: 'Glas', emoji: '🥃' }] },
+    { letter: 'H', words: [{ text: 'Hund', emoji: '🐕' }, { text: 'Hus', emoji: '🏠' }] },
+    { letter: 'I', words: [{ text: 'Ildflue', emoji: '🪲' }, { text: 'Is', emoji: '🍦' }] },
+    { letter: 'J', words: [{ text: 'Jaguar', emoji: '🐆' }, { text: 'Jakke', emoji: '🧥' }] },
+    { letter: 'K', words: [{ text: 'Kat', emoji: '🐈' }, { text: 'Kaffe', emoji: '☕' }] },
+    { letter: 'L', words: [{ text: 'Løve', emoji: '🦁' }, { text: 'Lampe', emoji: '💡' }] },
+    { letter: 'M', words: [{ text: 'Mus', emoji: '🐭' }, { text: 'Mælk', emoji: '🥛' }] },
+    { letter: 'N', words: [{ text: 'Næsehorn', emoji: '🦏' }, { text: 'Nøgle', emoji: '🔑' }] },
+    { letter: 'O', words: [{ text: 'Ørn', emoji: '🦅' }, { text: 'Oste', emoji: '🧀' }] },
+    { letter: 'P', words: [{ text: 'Pingvin', emoji: '🐧' }, { text: 'Penge', emoji: '💰' }] },
+    { letter: 'Q', words: [{ text: 'Quokka', emoji: '🦘' }, { text: 'Quiz', emoji: '❓' }] },
+    { letter: 'R', words: [{ text: 'Ræv', emoji: '🦊' }, { text: 'Regn', emoji: '🌧️' }] },
+    { letter: 'S', words: [{ text: 'Slange', emoji: '🐍' }, { text: 'Sko', emoji: '👟' }] },
+    { letter: 'T', words: [{ text: 'Tiger', emoji: '🐯' }, { text: 'Tog', emoji: '🚂' }] },
+    { letter: 'U', words: [{ text: 'Ugle', emoji: '🦉' }, { text: 'Ur', emoji: '⏰' }] },
+    { letter: 'V', words: [{ text: 'Vildsvin', emoji: '🐗' }, { text: 'Vand', emoji: '💧' }] },
+    { letter: 'W', words: [{ text: 'Wombat', emoji: '🦫' }, { text: 'Weekend', emoji: '🏖️' }] },
+    { letter: 'X', words: [{ text: 'Xerus', emoji: '🐿️' }, { text: 'Xylofon', emoji: '🎵' }] },
+    { letter: 'Y', words: [{ text: 'Yak', emoji: '🐃' }, { text: 'Yoghurt', emoji: '🥣' }] },
+    { letter: 'Z', words: [{ text: 'Zebra', emoji: '🦓' }, { text: 'Zone', emoji: '🗺️' }] },
+    { letter: 'Æ', words: [{ text: 'Æsel', emoji: '🫏' }, { text: 'Æble', emoji: '🍎' }] },
+    { letter: 'Ø', words: [{ text: 'Ørred', emoji: '🐟' }, { text: 'Øl', emoji: '🍺' }] },
+    { letter: 'Å', words: [{ text: 'Ål', emoji: '🐍' }, { text: 'Åben', emoji: '🔓' }] }
 ];
 
 // Track which cards have been clicked
 const clickedCards = new Set();
-
-// Image cache using localStorage
-const IMAGE_CACHE_KEY = 'danishAlphabetImageCache';
-
-// Get cached images
-function getCachedImages() {
-    try {
-        const cached = localStorage.getItem(IMAGE_CACHE_KEY);
-        return cached ? JSON.parse(cached) : {};
-    } catch (e) {
-        return {};
-    }
-}
-
-// Save images to cache
-function saveImageToCache(word, imageUrl) {
-    try {
-        const cache = getCachedImages();
-        cache[word] = imageUrl;
-        localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
-    } catch (e) {
-        console.warn('Could not cache image:', e);
-    }
-}
-
-// Get image URL for a word - uses curated emoji/icon style images
-function getImageUrl(word) {
-    const cache = getCachedImages();
-
-    // Check if we have a cached image
-    if (cache[word]) {
-        return cache[word];
-    }
-
-    // Map Danish words to emojis for consistent, recognizable images
-    const emojiMap = {
-        'Abe': '🐵',
-        'Avis': '📰',
-        'Bjørn': '🐻',
-        'Brød': '🍞',
-        'Cikade': '🦗',
-        'Cykel': '🚲',
-        'Delfin': '🐬',
-        'Dør': '🚪',
-        'Egern': '🐿️',
-        'Elev': '👨‍🎓',
-        'Fisk': '🐟',
-        'Fod': '🦶',
-        'Giraf': '🦒',
-        'Glas': '🥃',
-        'Hund': '🐕',
-        'Hus': '🏠',
-        'Ildflue': '🪲',
-        'Is': '🍦',
-        'Jaguar': '🐆',
-        'Jakke': '🧥',
-        'Kat': '🐈',
-        'Kaffe': '☕',
-        'Løve': '🦁',
-        'Lampe': '💡',
-        'Mus': '🐭',
-        'Mælk': '🥛',
-        'Næsehorn': '🦏',
-        'Nøgle': '🔑',
-        'Ørn': '🦅',
-        'Oste': '🧀',
-        'Pingvin': '🐧',
-        'Penge': '💰',
-        'Quokka': '🦘',
-        'Quiz': '❓',
-        'Ræv': '🦊',
-        'Regn': '🌧️',
-        'Slange': '🐍',
-        'Sko': '👟',
-        'Tiger': '🐯',
-        'Tog': '🚂',
-        'Ugle': '🦉',
-        'Ur': '⏰',
-        'Vildsvin': '🐗',
-        'Vand': '💧',
-        'Wombat': '🦫',
-        'Weekend': '🏖️',
-        'Xerus': '🐿️',
-        'Xylofon': '🎵',
-        'Yak': '🐃',
-        'Yoghurt': '🥣',
-        'Zebra': '🦓',
-        'Zone': '🗺️',
-        'Æsel': '🫏',
-        'Æble': '🍎',
-        'Ørred': '🐟',
-        'Øl': '🍺',
-        'Ål': '🐍',
-        'Åben': '🔓'
-    };
-
-    const emoji = emojiMap[word] || '📷';
-
-    // Create a data URL with the emoji as an SVG
-    // This ensures the image always loads and displays correctly
-    const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="400" height="400">
-            <rect width="100" height="100" fill="#ffffff"/>
-            <text x="50" y="50" font-size="60" text-anchor="middle" dominant-baseline="middle">${emoji}</text>
-        </svg>
-    `;
-
-    const imageUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
-
-    // Cache the URL
-    saveImageToCache(word, imageUrl);
-
-    return imageUrl;
-}
 
 // Initialize the app
 function init() {
@@ -177,22 +63,21 @@ function createLetterCard(item, index) {
         const wordItem = document.createElement('div');
         wordItem.className = 'word-item';
 
-        // Create image element
-        const img = document.createElement('img');
-        img.src = getImageUrl(word);
-        img.alt = word;
-        img.className = 'word-image';
+        // Create emoji element
+        const emojiSpan = document.createElement('span');
+        emojiSpan.className = 'word-emoji';
+        emojiSpan.textContent = word.emoji;
 
         // Create text element
         const text = document.createElement('h3');
-        text.textContent = word;
+        text.textContent = word.text;
 
-        wordItem.appendChild(img);
+        wordItem.appendChild(emojiSpan);
         wordItem.appendChild(text);
 
         wordItem.addEventListener('click', (e) => {
             e.stopPropagation();
-            speakText(word);
+            speakText(word.text);
             animateCard(wordItem, 'spin');
         });
         wordsSection.appendChild(wordItem);

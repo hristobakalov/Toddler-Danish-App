@@ -157,14 +157,13 @@ header p {
     color: #fff;
 }
 
-.word-image {
-    width: 120px;
-    height: 120px;
-    border-radius: 20px;
-    background: white;
-    padding: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    object-fit: contain;
+.word-emoji {
+    font-size: 5rem;
+    display: block;
+    text-align: center;
+    line-height: 1;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    user-select: none;
 }
 
 /* Mobile responsiveness */
@@ -190,9 +189,8 @@ header p {
         font-size: 1.8rem;
     }
 
-    .word-image {
-        width: 100px;
-        height: 100px;
+    .word-emoji {
+        font-size: 4rem;
     }
 }
 
@@ -229,8 +227,7 @@ header p {
         font-size: 1.6rem;
     }
 
-    .word-image {
-        width: 90px;
-        height: 90px;
+    .word-emoji {
+        font-size: 3.5rem;
     }
 }
