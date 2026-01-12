@@ -3,7 +3,7 @@ export const danishSentences = [
     {
         id: 'morning',
         gif: 'gifs/morning.gif',
-        audio: 'records/godmorgen.mp3',
+        audio: 'records/morning.mp3',
         sentence: 'Hej! God morgen alle sammen!',
         words: ['Hej!', 'God', 'morgen', 'alle', 'sammen!'],
         emoji: '☀️'
@@ -31,5 +31,37 @@ export const danishSentences = [
         sentence: 'Jeg skal tisse!',
         words: ['Jeg', 'skal', 'tisse!'],
         emoji: '🚽'
+    },
+    {
+        id: 'help',
+        gif: 'gifs/help.gif',
+        audio: 'records/help.mp3',
+        sentence: 'Hjælp mig!',
+        words: ['Hjælp', 'mig!'],
+        emoji: '🆘'
+    },
+    {
+        id: 'love',
+        gif: 'gifs/love.gif',
+        audio: 'records/love.mp3',
+        sentence: 'Jeg elsker dig!',
+        words: ['Jeg', 'elsker', 'dig!'],
+        emoji: '❤️'
+    },
+    {
+        id: 'tired',
+        gif: 'gifs/tired.gif',
+        audio: 'records/tired.mp3',
+        sentence: 'Jeg er træt!',
+        words: ['Jeg', 'er', 'træt!'],
+        emoji: '😴'
+    },
+    {
+        id: 'hurt',
+        gif: 'gifs/hurt.gif',
+        audio: 'records/hurt.mp3',
+        sentence: 'Det gør ondt!',
+        words: ['Det', 'gør', 'ondt!'],
+        emoji: '🤕'
     }
 ];
