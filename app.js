@@ -31,16 +31,75 @@ const danishAlphabet = [
     { letter: 'Å', words: [{ text: 'Ål', emoji: '🐍' }, { text: 'Åben', emoji: '🔓' }] }
 ];
 
+// Danish colors data
+const danishColors = [
+    { name: 'Rød', color: '#FF0000', emoji: '❤️' },
+    { name: 'Blå', color: '#0000FF', emoji: '💙' },
+    { name: 'Gul', color: '#FFFF00', emoji: '💛' },
+    { name: 'Grøn', color: '#00FF00', emoji: '💚' },
+    { name: 'Orange', color: '#FF8800', emoji: '🧡' },
+    { name: 'Lilla', color: '#800080', emoji: '💜' },
+    { name: 'Pink', color: '#FFC0CB', emoji: '🩷' },
+    { name: 'Brun', color: '#8B4513', emoji: '🤎' },
+    { name: 'Sort', color: '#000000', emoji: '🖤' },
+    { name: 'Hvid', color: '#FFFFFF', emoji: '🤍' },
+    { name: 'Grå', color: '#808080', emoji: '🩶' },
+    { name: 'Turkis', color: '#40E0D0', emoji: '💎' }
+];
+
 // Track which cards have been clicked
 const clickedCards = new Set();
 
 // Initialize the app
 function init() {
-    const grid = document.getElementById('alphabetGrid');
-
+    // Initialize alphabet game
+    const alphabetGrid = document.getElementById('alphabetGrid');
     danishAlphabet.forEach((item, index) => {
         const card = createLetterCard(item, index);
-        grid.appendChild(card);
+        alphabetGrid.appendChild(card);
+    });
+
+    // Initialize colors game
+    const colorsGrid = document.getElementById('colorsGrid');
+    danishColors.forEach((item, index) => {
+        const card = createColorCard(item, index);
+        colorsGrid.appendChild(card);
+    });
+
+    // Setup navigation
+    setupNavigation();
+}
+
+// Setup navigation between games
+function setupNavigation() {
+    const navItems = document.querySelectorAll('.nav-item');
+    const gameTitle = document.getElementById('gameTitle');
+    const gameSubtitle = document.getElementById('gameSubtitle');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const gameName = item.dataset.game;
+
+            // Update active nav item
+            navItems.forEach(nav => nav.classList.remove('active'));
+            item.classList.add('active');
+
+            // Hide all games
+            document.querySelectorAll('.game-content').forEach(game => {
+                game.classList.remove('active');
+            });
+
+            // Show selected game
+            if (gameName === 'alphabet') {
+                document.getElementById('alphabetGame').classList.add('active');
+                gameTitle.textContent = '🔤 Alfabet';
+                gameSubtitle.textContent = 'Tryk på kortet for at lære!';
+            } else if (gameName === 'colors') {
+                document.getElementById('colorsGame').classList.add('active');
+                gameTitle.textContent = '🎨 Farver';
+                gameSubtitle.textContent = 'Tryk på farven for at lære!';
+            }
+        });
     });
 }
 
@@ -120,6 +179,44 @@ function animateCard(element, animationClass) {
     setTimeout(() => {
         element.classList.remove(animationClass);
     }, 600);
+}
+
+// Create a color card
+function createColorCard(item, index) {
+    const card = document.createElement('div');
+    card.className = 'color-card';
+    card.dataset.index = index;
+
+    // Color display box
+    const colorDisplay = document.createElement('div');
+    colorDisplay.className = 'color-display';
+    colorDisplay.style.backgroundColor = item.color;
+
+    // Add border for white color visibility
+    if (item.name === 'Hvid') {
+        colorDisplay.style.border = '3px solid #ddd';
+    }
+
+    // Add emoji to color display
+    const emojiSpan = document.createElement('span');
+    emojiSpan.textContent = item.emoji;
+    colorDisplay.appendChild(emojiSpan);
+
+    // Color name
+    const colorName = document.createElement('h2');
+    colorName.className = 'color-name';
+    colorName.textContent = item.name;
+
+    card.appendChild(colorDisplay);
+    card.appendChild(colorName);
+
+    // Card click handler
+    card.addEventListener('click', () => {
+        animateCard(card, 'spin');
+        speakText(item.name);
+    });
+
+    return card;
 }
 
 // Text-to-speech function
