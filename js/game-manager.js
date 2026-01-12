@@ -1,13 +1,15 @@
 import { AlphabetGame } from './games/alphabet-game.js';
 import { ColorsGame } from './games/colors-game.js';
 import { NumbersGame } from './games/numbers-game.js';
+import { SentencesGame } from './games/sentences-game.js';
 
 export class GameManager {
     constructor() {
         this.games = {
             alphabet: null,
             colors: null,
-            numbers: null
+            numbers: null,
+            sentences: null
         };
         this.currentGame = 'alphabet';
     }
@@ -22,6 +24,9 @@ export class GameManager {
 
         this.games.numbers = new NumbersGame('numbersFreePlay', 'numbersQuizMode');
         this.games.numbers.init();
+
+        this.games.sentences = new SentencesGame('sentencesContainer');
+        this.games.sentences.init();
 
         // Setup navigation
         this.setupNavigation();
@@ -71,6 +76,12 @@ export class GameManager {
                 document.getElementById('numbersGame').classList.add('active');
                 titleEl.textContent = '🔢 Tal';
                 subtitleEl.textContent = 'Tryk på tallet for at lære!';
+                break;
+
+            case 'sentences':
+                document.getElementById('sentencesGame').classList.add('active');
+                titleEl.textContent = '💬 Sætninger';
+                subtitleEl.textContent = 'Tryk for at lytte til sætningen!';
                 break;
 
             default:

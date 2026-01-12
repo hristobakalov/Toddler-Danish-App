@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dansk-alfabet-v8';
+const CACHE_NAME = 'dansk-alfabet-v10';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -9,11 +9,17 @@ const urlsToCache = [
   '/js/games/alphabet-game.js',
   '/js/games/colors-game.js',
   '/js/games/numbers-game.js',
+  '/js/games/sentences-game.js',
   '/js/data/alphabet-data.js',
   '/js/data/colors-data.js',
   '/js/data/numbers-data.js',
+  '/js/data/sentences-data.js',
   '/js/utils/speech.js',
-  '/js/utils/animations.js'
+  '/js/utils/animations.js',
+  '/records/godmorgen.mp3',
+  '/records/dance.mp3',
+  '/records/hungry.mp3',
+  '/records/pee.mp3'
 ];
 
 // Install service worker and cache files

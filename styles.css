@@ -586,6 +586,133 @@ header p {
     transform: scale(0.98);
 }
 
+/* Sentences Game Styles */
+#sentencesContainer {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.sentence-card {
+    background: white;
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+    border: 6px solid #fff;
+    text-align: center;
+}
+
+.sentence-gif-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.sentence-gif {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.sentence-display {
+    margin: 30px 0;
+}
+
+.sentence-words {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #333;
+    line-height: 1.6;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+.sentence-word {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.sentence-word.highlight {
+    background: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 100%);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+}
+
+.sentence-speak-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    font-size: 1.8rem;
+    font-weight: 900;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    margin: 20px auto;
+    display: block;
+    transition: all 0.3s ease;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+.sentence-speak-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.sentence-speak-btn:active {
+    transform: scale(0.98);
+}
+
+.sentence-speak-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.sentence-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.sentence-nav-btn {
+    background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    font-weight: 900;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+.sentence-nav-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.sentence-nav-btn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.sentence-nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.sentence-indicator {
+    display: none;
+}
+
 /* Desktop Navigation - Move to top */
 @media (min-width: 769px) {
     body {
@@ -696,6 +823,28 @@ header p {
 
     .feedback-icon {
         font-size: 10rem;
+    }
+
+    .sentence-card {
+        padding: 20px;
+    }
+
+    .sentence-gif {
+        max-height: 350px;
+    }
+
+    .sentence-words {
+        font-size: 1.5rem;
+    }
+
+    .sentence-speak-btn {
+        font-size: 1.3rem;
+        padding: 15px 25px;
+    }
+
+    .sentence-nav-btn {
+        font-size: 1.3rem;
+        padding: 12px 20px;
     }
 }
 
@@ -808,5 +957,27 @@ header p {
     .exit-game-btn {
         font-size: 1.2rem;
         padding: 12px 25px;
+    }
+
+    .sentence-card {
+        padding: 15px;
+    }
+
+    .sentence-gif {
+        max-height: 300px;
+    }
+
+    .sentence-words {
+        font-size: 1.2rem;
+    }
+
+    .sentence-speak-btn {
+        font-size: 1.1rem;
+        padding: 12px 20px;
+    }
+
+    .sentence-nav-btn {
+        font-size: 1.1rem;
+        padding: 10px 15px;
     }
 }

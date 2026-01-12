@@ -51,7 +51,7 @@ export class SpeechManager {
 
         const utterance = new SpeechSynthesisUtterance(textToSpeak);
         utterance.lang = 'da-DK'; // Danish language
-        utterance.rate = 0.7; // Slower for toddlers
+        utterance.rate = 0.84; // 20% faster than original 0.7 (0.7 * 1.2 = 0.84)
         utterance.pitch = 1.2; // Higher pitch for toddlers
         utterance.volume = 1.0;
 
