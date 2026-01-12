@@ -345,7 +345,7 @@ header p {
     border-radius: 25px;
     cursor: pointer;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    margin: 30px auto;
+    margin: 30px auto 50px auto;
     display: block;
     transition: all 0.3s ease;
     font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
@@ -629,9 +629,13 @@ header p {
     }
 
     .alphabet-grid,
-    .colors-grid,
-    .numbers-grid {
+    .colors-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .numbers-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 15px;
     }
 
@@ -698,6 +702,7 @@ header p {
 @media (max-width: 480px) {
     body {
         padding: 10px;
+        padding-bottom: 120px; /* Extra space for bottom nav on small screens */
     }
 
     header h1 {
@@ -706,6 +711,10 @@ header p {
 
     header p {
         font-size: 1rem;
+    }
+
+    .start-game-btn {
+        margin-bottom: 30px;
     }
 
     .letter-card {

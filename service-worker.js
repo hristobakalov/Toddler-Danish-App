@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dansk-alfabet-v7';
+const CACHE_NAME = 'dansk-alfabet-v8';
 const urlsToCache = [
   '/',
   '/index.html',
