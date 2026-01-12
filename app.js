@@ -58,7 +58,7 @@ function saveImageToCache(word, imageUrl) {
     }
 }
 
-// Get image URL for a word (using Unsplash for real photos)
+// Get image URL for a word - uses curated emoji/icon style images
 function getImageUrl(word) {
     const cache = getCachedImages();
 
@@ -67,73 +67,80 @@ function getImageUrl(word) {
         return cache[word];
     }
 
-    // Map Danish words to English search terms for better image results
-    const translationMap = {
-        'Abe': 'monkey',
-        'Avis': 'newspaper',
-        'Bjørn': 'bear',
-        'Brød': 'bread',
-        'Cikade': 'cicada',
-        'Cykel': 'bicycle',
-        'Delfin': 'dolphin',
-        'Dør': 'door',
-        'Egern': 'squirrel',
-        'Elev': 'student child',
-        'Fisk': 'fish',
-        'Fod': 'foot',
-        'Giraf': 'giraffe',
-        'Glas': 'glass cup',
-        'Hund': 'dog',
-        'Hus': 'house',
-        'Ildflue': 'firefly',
-        'Is': 'ice cream',
-        'Jaguar': 'jaguar',
-        'Jakke': 'jacket',
-        'Kat': 'cat',
-        'Kaffe': 'coffee',
-        'Løve': 'lion',
-        'Lampe': 'lamp',
-        'Mus': 'mouse',
-        'Mælk': 'milk',
-        'Næsehorn': 'rhinoceros',
-        'Nøgle': 'key',
-        'Ørn': 'eagle',
-        'Oste': 'cheese',
-        'Pingvin': 'penguin',
-        'Penge': 'money coins',
-        'Quokka': 'quokka',
-        'Quiz': 'quiz game',
-        'Ræv': 'fox',
-        'Regn': 'rain',
-        'Slange': 'snake',
-        'Sko': 'shoe',
-        'Tiger': 'tiger',
-        'Tog': 'train',
-        'Ugle': 'owl',
-        'Ur': 'clock watch',
-        'Vildsvin': 'wild boar',
-        'Vand': 'water glass',
-        'Wombat': 'wombat',
-        'Weekend': 'weekend relaxation',
-        'Xerus': 'squirrel africa',
-        'Xylofon': 'xylophone',
-        'Yak': 'yak',
-        'Yoghurt': 'yogurt',
-        'Zebra': 'zebra',
-        'Zone': 'zone area',
-        'Æsel': 'donkey',
-        'Æble': 'apple',
-        'Ørred': 'trout fish',
-        'Øl': 'beer',
-        'Ål': 'eel',
-        'Åben': 'open door'
+    // Map Danish words to emojis for consistent, recognizable images
+    const emojiMap = {
+        'Abe': '🐵',
+        'Avis': '📰',
+        'Bjørn': '🐻',
+        'Brød': '🍞',
+        'Cikade': '🦗',
+        'Cykel': '🚲',
+        'Delfin': '🐬',
+        'Dør': '🚪',
+        'Egern': '🐿️',
+        'Elev': '👨‍🎓',
+        'Fisk': '🐟',
+        'Fod': '🦶',
+        'Giraf': '🦒',
+        'Glas': '🥃',
+        'Hund': '🐕',
+        'Hus': '🏠',
+        'Ildflue': '🪲',
+        'Is': '🍦',
+        'Jaguar': '🐆',
+        'Jakke': '🧥',
+        'Kat': '🐈',
+        'Kaffe': '☕',
+        'Løve': '🦁',
+        'Lampe': '💡',
+        'Mus': '🐭',
+        'Mælk': '🥛',
+        'Næsehorn': '🦏',
+        'Nøgle': '🔑',
+        'Ørn': '🦅',
+        'Oste': '🧀',
+        'Pingvin': '🐧',
+        'Penge': '💰',
+        'Quokka': '🦘',
+        'Quiz': '❓',
+        'Ræv': '🦊',
+        'Regn': '🌧️',
+        'Slange': '🐍',
+        'Sko': '👟',
+        'Tiger': '🐯',
+        'Tog': '🚂',
+        'Ugle': '🦉',
+        'Ur': '⏰',
+        'Vildsvin': '🐗',
+        'Vand': '💧',
+        'Wombat': '🦫',
+        'Weekend': '🏖️',
+        'Xerus': '🐿️',
+        'Xylofon': '🎵',
+        'Yak': '🐃',
+        'Yoghurt': '🥣',
+        'Zebra': '🦓',
+        'Zone': '🗺️',
+        'Æsel': '🫏',
+        'Æble': '🍎',
+        'Ørred': '🐟',
+        'Øl': '🍺',
+        'Ål': '🐍',
+        'Åben': '🔓'
     };
 
-    const searchTerm = translationMap[word] || word;
+    const emoji = emojiMap[word] || '📷';
 
-    // Use Unsplash Source for free, high-quality photos
-    // This service provides random images based on search terms
-    const imageUrl = `https://source.unsplash.com/400x400/?${encodeURIComponent(searchTerm)}`;
+    // Create a data URL with the emoji as an SVG
+    // This ensures the image always loads and displays correctly
+    const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="400" height="400">
+            <rect width="100" height="100" fill="#ffffff"/>
+            <text x="50" y="50" font-size="60" text-anchor="middle" dominant-baseline="middle">${emoji}</text>
+        </svg>
+    `;
+
+    const imageUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
 
     // Cache the URL
     saveImageToCache(word, imageUrl);
