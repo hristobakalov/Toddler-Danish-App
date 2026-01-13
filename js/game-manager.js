@@ -3,6 +3,7 @@ import { ColorsGame } from './games/colors-game.js';
 import { NumbersGame } from './games/numbers-game.js';
 import { SentencesGame } from './games/sentences-game.js';
 import { ActionsGame } from './games/actions-game.js';
+import { BoxGame } from './games/box-game.js';
 
 export class GameManager {
     constructor() {
@@ -11,7 +12,8 @@ export class GameManager {
             colors: null,
             numbers: null,
             sentences: null,
-            actions: null
+            actions: null,
+            box: null
         };
         this.currentGame = 'alphabet';
     }
@@ -32,6 +34,9 @@ export class GameManager {
 
         this.games.actions = new ActionsGame('actionsFreePlay', 'actionsQuizMode');
         this.games.actions.init();
+
+        this.games.box = new BoxGame('boxGameContainer');
+        this.games.box.init();
 
         // Setup navigation
         this.setupNavigation();
@@ -93,6 +98,12 @@ export class GameManager {
                 document.getElementById('actionsGame').classList.add('active');
                 titleEl.textContent = '🏃 Handlinger';
                 subtitleEl.textContent = 'Tryk på handlingen for at lære!';
+                break;
+
+            case 'box':
+                document.getElementById('boxGame').classList.add('active');
+                titleEl.textContent = '🎁 Hvad er i boksen?';
+                subtitleEl.textContent = 'Åbn gaven for at se!';
                 break;
 
             default:
