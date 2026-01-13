@@ -2,6 +2,7 @@ import { AlphabetGame } from './games/alphabet-game.js';
 import { ColorsGame } from './games/colors-game.js';
 import { NumbersGame } from './games/numbers-game.js';
 import { SentencesGame } from './games/sentences-game.js';
+import { ActionsGame } from './games/actions-game.js';
 
 export class GameManager {
     constructor() {
@@ -9,7 +10,8 @@ export class GameManager {
             alphabet: null,
             colors: null,
             numbers: null,
-            sentences: null
+            sentences: null,
+            actions: null
         };
         this.currentGame = 'alphabet';
     }
@@ -27,6 +29,9 @@ export class GameManager {
 
         this.games.sentences = new SentencesGame('sentencesContainer');
         this.games.sentences.init();
+
+        this.games.actions = new ActionsGame('actionsFreePlay', 'actionsQuizMode');
+        this.games.actions.init();
 
         // Setup navigation
         this.setupNavigation();
@@ -82,6 +87,12 @@ export class GameManager {
                 document.getElementById('sentencesGame').classList.add('active');
                 titleEl.textContent = '💬 Sætninger';
                 subtitleEl.textContent = 'Tryk for at lytte til sætningen!';
+                break;
+
+            case 'actions':
+                document.getElementById('actionsGame').classList.add('active');
+                titleEl.textContent = '🏃 Handlinger';
+                subtitleEl.textContent = 'Tryk på handlingen for at lære!';
                 break;
 
             default:
