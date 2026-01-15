@@ -4,6 +4,7 @@ import { NumbersGame } from './games/numbers-game.js';
 import { SentencesGame } from './games/sentences-game.js';
 import { ActionsGame } from './games/actions-game.js';
 import { BoxGame } from './games/box-game.js';
+import { LetterTracingGame } from './games/letter-tracing-game.js';
 
 export class GameManager {
     constructor() {
@@ -13,7 +14,8 @@ export class GameManager {
             numbers: null,
             sentences: null,
             actions: null,
-            box: null
+            box: null,
+            letterTracing: null
         };
         this.currentGame = 'alphabet';
     }
@@ -37,6 +39,9 @@ export class GameManager {
 
         this.games.box = new BoxGame('boxGameContainer');
         this.games.box.init();
+
+        this.games.letterTracing = new LetterTracingGame('letterTracingContainer');
+        this.games.letterTracing.init();
 
         // Setup navigation
         this.setupNavigation();
@@ -104,6 +109,12 @@ export class GameManager {
                 document.getElementById('boxGame').classList.add('active');
                 titleEl.textContent = '🎁 Hvad er i boksen?';
                 subtitleEl.textContent = 'Åbn gaven for at se!';
+                break;
+
+            case 'letterTracing':
+                document.getElementById('letterTracingGame').classList.add('active');
+                titleEl.textContent = '✏️ Bogstav Tegning';
+                subtitleEl.textContent = 'Tegn bogstavet!';
                 break;
 
             default:
