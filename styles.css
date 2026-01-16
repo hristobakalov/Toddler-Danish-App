@@ -2157,3 +2157,408 @@ header p {
         font-size: 1.1rem;
     }
 }
+
+/* Parking Game Styles */
+.parking-level-selector {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.parking-title {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.parking-level-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.parking-level-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 20px;
+    padding: 30px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.parking-level-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.parking-level-btn:active {
+    transform: scale(0.98);
+}
+
+.level-icon {
+    font-size: 3rem;
+}
+
+.level-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.level-detail {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Game Wrapper */
+.parking-game-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.parking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.parking-back-btn,
+.parking-reset-btn {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+    border: none;
+    border-radius: 15px;
+    padding: 12px 20px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+}
+
+.parking-back-btn:hover,
+.parking-reset-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
+}
+
+.parking-level-title {
+    font-size: 1.5rem;
+    color: #667eea;
+    text-align: center;
+    flex: 1;
+}
+
+.parking-info {
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+}
+
+.parking-current-car {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.car-indicator {
+    font-size: 1.1rem;
+    color: #667eea;
+    font-weight: bold;
+}
+
+.car-color-name {
+    font-size: 1.5rem;
+    color: #764ba2;
+    font-weight: bold;
+}
+
+.parking-progress {
+    font-size: 1.3rem;
+    color: #764ba2;
+    font-weight: bold;
+}
+
+/* Grid Container */
+.parking-grid-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    min-height: 400px;
+}
+
+.parking-grid {
+    display: grid;
+    gap: 3px;
+    background: #ddd;
+    padding: 3px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    aspect-ratio: 1;
+}
+
+.parking-cell {
+    background: white;
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+    min-width: 0;
+    min-height: 0;
+}
+
+.parking-spot {
+    border: 4px dashed;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.parking-spot-green {
+    border-color: #22C55E;
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.parking-spot-yellow {
+    border-color: #FFD700;
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.parking-spot-red {
+    border-color: #DC143C;
+    background: rgba(220, 20, 60, 0.1);
+}
+
+.parking-spot-blue {
+    border-color: #4169E1;
+    background: rgba(65, 105, 225, 0.1);
+}
+
+/* Cars */
+.parking-car {
+    position: absolute;
+    inset: 0;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.parking-car.active-car {
+    z-index: 30;
+    filter: drop-shadow(0 0 15px rgba(102, 126, 234, 1));
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.8));
+    }
+    50% {
+        filter: drop-shadow(0 0 20px rgba(102, 126, 234, 1));
+    }
+}
+
+.parking-car.parked {
+    cursor: default;
+    animation: parkSuccess 0.5s ease;
+}
+
+@keyframes parkSuccess {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.parking-car.wrong-spot {
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* Instructions */
+.parking-instructions {
+    text-align: center;
+    padding: 15px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.desktop-instructions,
+.mobile-instructions {
+    font-size: 1.2rem;
+    color: #667eea;
+    font-weight: bold;
+}
+
+.mobile-instructions {
+    display: none;
+}
+
+/* Level Complete Overlay */
+.parking-complete-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.parking-complete-content {
+    background: white;
+    border-radius: 30px;
+    padding: 50px 40px;
+    text-align: center;
+    max-width: 400px;
+    animation: slideUp 0.5s ease;
+}
+
+.complete-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    animation: bounceIn 1s ease;
+}
+
+.parking-complete-content h2 {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.parking-complete-content p {
+    font-size: 1.3rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.complete-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.parking-next-btn,
+.parking-retry-btn,
+.parking-menu-btn {
+    border: none;
+    border-radius: 15px;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.parking-next-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.parking-retry-btn {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.parking-menu-btn {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #667eea;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.parking-next-btn:hover,
+.parking-retry-btn:hover,
+.parking-menu-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .parking-game-wrapper {
+        padding: 15px;
+    }
+
+    .parking-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .parking-level-title {
+        font-size: 1.2rem;
+    }
+
+    .parking-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .desktop-instructions {
+        display: none;
+    }
+
+    .mobile-instructions {
+        display: block;
+    }
+}
+
+@media (max-width: 480px) {
+    .parking-title {
+        font-size: 2rem;
+    }
+
+    .parking-back-btn,
+    .parking-reset-btn {
+        padding: 10px 15px;
+        font-size: 1rem;
+    }
+
+    .parking-complete-content {
+        padding: 30px 20px;
+    }
+
+    .complete-icon {
+        font-size: 4rem;
+    }
+
+    .parking-complete-content h2 {
+        font-size: 2rem;
+    }
+
+    .car-color-name {
+        font-size: 1.3rem;
+    }
+}

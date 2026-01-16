@@ -5,6 +5,7 @@ import { SentencesGame } from './games/sentences-game.js';
 import { ActionsGame } from './games/actions-game.js';
 import { BoxGame } from './games/box-game.js';
 import { LetterTracingGame } from './games/letter-tracing-game.js';
+import { ParkingGame } from './games/parking-game.js';
 
 export class GameManager {
     constructor() {
@@ -15,7 +16,8 @@ export class GameManager {
             sentences: null,
             actions: null,
             box: null,
-            letterTracing: null
+            letterTracing: null,
+            parking: null
         };
         this.currentGame = 'alphabet';
     }
@@ -42,6 +44,9 @@ export class GameManager {
 
         this.games.letterTracing = new LetterTracingGame('letterTracingContainer');
         this.games.letterTracing.init();
+
+        this.games.parking = new ParkingGame('parkingGameContainer');
+        this.games.parking.init();
 
         // Setup navigation
         this.setupIntroScreen();
@@ -116,6 +121,12 @@ export class GameManager {
                 document.getElementById('letterTracingGame').classList.add('active');
                 titleEl.textContent = '✏️ Bogstav Tegning';
                 subtitleEl.textContent = 'Tegn bogstavet!';
+                break;
+
+            case 'parking':
+                document.getElementById('parkingGame').classList.add('active');
+                titleEl.textContent = '🚗 Parkering';
+                subtitleEl.textContent = 'Parker bilerne!';
                 break;
 
             default:

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toddler-v21';
+const CACHE_NAME = 'toddler-v25';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -14,6 +14,7 @@ const urlsToCache = [
   '/js/games/actions-game.js',
   '/js/games/box-game.js',
   '/js/games/letter-tracing-game.js',
+  '/js/games/parking-game.js',
   '/js/data/alphabet-data.js',
   '/js/data/colors-data.js',
   '/js/data/numbers-data.js',
@@ -21,6 +22,7 @@ const urlsToCache = [
   '/js/data/actions-data.js',
   '/js/data/animals-data.js',
   '/js/data/letter-tracing-data.js',
+  '/js/data/parking-data.js',
   '/js/utils/speech.js',
   '/js/utils/animations.js',
   '/records/morning.mp3',
