@@ -1,9 +1,10 @@
-const CACHE_NAME = 'toddler-v19';
+const CACHE_NAME = 'toddler-v20';
 const urlsToCache = [
   '/',
   '/index.html',
   '/styles.css',
   '/manifest.json',
+  '/logo.png',
   '/js/main.js',
   '/js/game-manager.js',
   '/js/games/alphabet-game.js',
