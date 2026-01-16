@@ -2089,8 +2089,9 @@ header p {
 
 /* Responsive adjustments for Intro Screen */
 @media (max-width: 768px) {
-    .intro-title {
-        font-size: 3.5rem;
+    .intro-logo {
+        max-width: 200px;
+        margin-bottom: 20px;
     }
 
     .intro-subtitle {
@@ -2129,12 +2130,13 @@ header p {
 }
 
 @media (max-width: 480px) {
-    .intro-title {
-        font-size: 2.8rem;
+    .intro-logo {
+        max-width: 180px;
+        margin-bottom: 15px;
     }
 
     .intro-subtitle {
-        font-size: 1.3rem;
+        display: none;
     }
 
     .game-grid {
