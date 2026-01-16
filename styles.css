@@ -2303,6 +2303,9 @@ header p {
     justify-content: center;
     margin-bottom: 20px;
     min-height: 400px;
+    touch-action: none; /* Prevent page scrolling on mobile */
+    -webkit-user-select: none; /* Prevent text selection */
+    user-select: none;
 }
 
 .parking-grid {

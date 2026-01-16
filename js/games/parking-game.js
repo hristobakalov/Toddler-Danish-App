@@ -125,11 +125,13 @@ export class ParkingGame {
         const gridContainer = document.getElementById('parkingGridContainer');
 
         gridContainer.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevent page scrolling
             this.touchStartX = e.touches[0].clientX;
             this.touchStartY = e.touches[0].clientY;
-        });
+        }, { passive: false });
 
         gridContainer.addEventListener('touchend', (e) => {
+            e.preventDefault(); // Prevent page scrolling
             if (this.getCurrentCar()?.isParked) return;
 
             const touchEndX = e.changedTouches[0].clientX;
@@ -159,7 +161,7 @@ export class ParkingGame {
                     }
                 }
             }
-        });
+        }, { passive: false });
     }
 
     removeKeyboardListener() {
