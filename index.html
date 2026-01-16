@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Lær Dansk - Alfabet & Farver</title>
+    <title>Tøddler - Lær Dansk</title>
 
     <!-- PWA Meta Tags -->
-    <meta name="description" content="Lær det danske alfabet og farver med sjove billeder og lyde!">
+    <meta name="description" content="Tøddler - Lær dansk med sjove spil! Alfabet, farver, tal, og meget mere!">
     <meta name="theme-color" content="#FF6B6B">
 
     <!-- iOS Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Lær Dansk">
+    <meta name="apple-mobile-web-app-title" content="Tøddler">
 
     <!-- iOS Icons -->
     <link rel="apple-touch-icon" href="icon-192.svg">
@@ -35,37 +35,55 @@
     <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
-    <!-- Navigation Menu -->
-    <nav class="nav-menu">
-        <button class="nav-item active" data-game="alphabet">
-            <span class="nav-icon">🔤</span>
-            <span class="nav-label">Alfabet</span>
-        </button>
-        <button class="nav-item" data-game="colors">
-            <span class="nav-icon">🎨</span>
-            <span class="nav-label">Farver</span>
-        </button>
-        <button class="nav-item" data-game="numbers">
-            <span class="nav-icon">🔢</span>
-            <span class="nav-label">Tal</span>
-        </button>
-        <button class="nav-item" data-game="sentences">
-            <span class="nav-icon">💬</span>
-            <span class="nav-label">Sætninger</span>
-        </button>
-        <button class="nav-item" data-game="actions">
-            <span class="nav-icon">🏃</span>
-            <span class="nav-label">Handlinger</span>
-        </button>
-        <button class="nav-item" data-game="box">
-            <span class="nav-icon">🎁</span>
-            <span class="nav-label">Boks</span>
-        </button>
-        <button class="nav-item" data-game="letterTracing">
-            <span class="nav-icon">✏️</span>
-            <span class="nav-label">Tegning</span>
-        </button>
-    </nav>
+    <!-- Home Button (hidden on intro screen) -->
+    <button class="home-btn" id="homeBtn" style="display: none;">
+        <span class="home-icon">🏠</span>
+    </button>
+
+    <!-- Intro Screen -->
+    <div class="intro-screen active" id="introScreen">
+        <div class="intro-container">
+            <h1 class="intro-title">Tøddler</h1>
+            <p class="intro-subtitle">Vælg et spil!</p>
+
+            <div class="game-grid">
+                <button class="game-card" data-game="alphabet">
+                    <span class="game-card-icon">🔤</span>
+                    <span class="game-card-label">Alfabet</span>
+                </button>
+
+                <button class="game-card" data-game="colors">
+                    <span class="game-card-icon">🎨</span>
+                    <span class="game-card-label">Farver</span>
+                </button>
+
+                <button class="game-card" data-game="numbers">
+                    <span class="game-card-icon">🔢</span>
+                    <span class="game-card-label">Tal</span>
+                </button>
+
+                <button class="game-card" data-game="sentences">
+                    <span class="game-card-icon">💬</span>
+                    <span class="game-card-label">Sætninger</span>
+                </button>
+
+                <button class="game-card" data-game="actions">
+                    <span class="game-card-icon">🏃</span>
+                    <span class="game-card-label">Handlinger</span>
+                </button>
+
+                <button class="game-card" data-game="box">
+                    <span class="game-card-icon">🎁</span>
+                    <span class="game-card-label">Boks</span>
+                </button>
+
+                <button class="game-card" data-game="letterTracing">
+                    <span class="game-card-icon">✏️</span>
+                    <span class="game-card-label">Tegning</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <header>

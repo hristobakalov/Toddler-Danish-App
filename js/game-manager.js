@@ -44,7 +44,8 @@ export class GameManager {
         this.games.letterTracing.init();
 
         // Setup navigation
-        this.setupNavigation();
+        this.setupIntroScreen();
+        this.setupHomeButton();
     }
 
     setupNavigation() {
@@ -124,5 +125,50 @@ export class GameManager {
 
     getCurrentGame() {
         return this.games[this.currentGame];
+    }
+
+    setupIntroScreen() {
+        const gameCards = document.querySelectorAll('.game-card');
+        const introScreen = document.getElementById('introScreen');
+        const container = document.querySelector('.container');
+        const homeBtn = document.getElementById('homeBtn');
+        const gameTitle = document.getElementById('gameTitle');
+        const gameSubtitle = document.getElementById('gameSubtitle');
+
+        gameCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const gameName = card.dataset.game;
+
+                // Hide intro screen
+                introScreen.classList.remove('active');
+
+                // Show game container and home button
+                container.style.display = 'block';
+                homeBtn.style.display = 'flex';
+
+                // Hide all games
+                document.querySelectorAll('.game-content').forEach(game => {
+                    game.classList.remove('active');
+                });
+
+                // Show selected game
+                this.switchGame(gameName, gameTitle, gameSubtitle);
+            });
+        });
+    }
+
+    setupHomeButton() {
+        const homeBtn = document.getElementById('homeBtn');
+        const introScreen = document.getElementById('introScreen');
+        const container = document.querySelector('.container');
+
+        homeBtn.addEventListener('click', () => {
+            // Hide game container and home button
+            container.style.display = 'none';
+            homeBtn.style.display = 'none';
+
+            // Show intro screen
+            introScreen.classList.add('active');
+        });
     }
 }

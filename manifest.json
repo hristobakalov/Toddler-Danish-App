@@ -1,7 +1,7 @@
 {
-  "name": "Dansk Alfabet - Lær Bogstaver",
-  "short_name": "Dansk Alfabet",
-  "description": "Lær det danske alfabet med sjove billeder og lyde!",
+  "name": "Tøddler - Lær Dansk",
+  "short_name": "Tøddler",
+  "description": "Lær dansk med sjove spil! Alfabet, farver, tal, og meget mere!",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FFD93D",
