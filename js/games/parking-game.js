@@ -191,11 +191,38 @@ export class ParkingGame {
     }
 
     placeParkingSpots(level) {
-        level.parkingSpots.forEach(spot => {
+        // Generate random parking spots
+        const spots = this.generateRandomParkingSpots(level);
+
+        spots.forEach(spot => {
             const cell = this.grid[spot.row][spot.col];
             cell.element.classList.add('parking-spot', `parking-spot-${spot.color}`);
             cell.parkingSpot = spot.color;
         });
+    }
+
+    generateRandomParkingSpots(level) {
+        const spots = [];
+        const usedPositions = new Set();
+
+        // Get the colors we need based on the level's start positions
+        const colors = level.startPositions.map(pos => pos.color);
+
+        // Generate random positions for each color
+        colors.forEach(color => {
+            let row, col, key;
+            do {
+                // Random position anywhere in the grid
+                row = Math.floor(Math.random() * level.gridSize.rows);
+                col = Math.floor(Math.random() * level.gridSize.cols);
+                key = `${row},${col}`;
+            } while (usedPositions.has(key));
+
+            usedPositions.add(key);
+            spots.push({ row, col, color });
+        });
+
+        return spots;
     }
 
     placeCars(level) {
@@ -221,7 +248,12 @@ export class ParkingGame {
 
             const cell = this.grid[pos.row][pos.col];
             cell.element.appendChild(carElement);
-            cell.occupied = true;
+
+            // Only mark the first car (current car) as occupied
+            // Other cars are "ghosts" until it's their turn
+            if (index === 0) {
+                cell.occupied = true;
+            }
 
             car.element = carElement;
             this.cars.push(car);
@@ -271,11 +303,24 @@ export class ParkingGame {
     }
 
     switchToNextUnparkedCar() {
+        // Mark current car's cell as no longer occupied (it's parked now)
+        const currentCar = this.getCurrentCar();
+        if (currentCar) {
+            const currentCell = this.grid[currentCar.row][currentCar.col];
+            currentCell.occupied = false;
+        }
+
         // Find next unparked car
         for (let i = 0; i < this.cars.length; i++) {
             const nextIndex = (this.currentCarIndex + i + 1) % this.cars.length;
             if (!this.cars[nextIndex].isParked) {
                 this.currentCarIndex = nextIndex;
+
+                // Mark new current car's cell as occupied
+                const nextCar = this.cars[nextIndex];
+                const nextCell = this.grid[nextCar.row][nextCar.col];
+                nextCell.occupied = true;
+
                 this.updateCurrentCarDisplay();
                 return;
             }
