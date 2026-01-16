@@ -1977,26 +1977,26 @@ header p {
 }
 
 .intro-logo {
-    max-width: 300px;
+    max-width: 220px;
     width: 80%;
     height: auto;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     animation: bounceIn 1s ease;
     filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.3));
 }
 
 .intro-subtitle {
-    font-size: 2rem;
+    font-size: 1.6rem;
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    margin-bottom: 50px;
+    margin-bottom: 30px;
 }
 
 .game-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 25px;
-    max-width: 900px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    max-width: 700px;
     margin: 0 auto;
     padding: 0 15px;
 }
@@ -2004,16 +2004,16 @@ header p {
 .game-card {
     background: white;
     border: none;
-    border-radius: 25px;
-    padding: 30px 20px;
+    border-radius: 20px;
+    padding: 20px 15px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
-    min-height: 180px;
+    gap: 10px;
+    min-height: 130px;
 }
 
 .game-card:hover {
@@ -2026,12 +2026,12 @@ header p {
 }
 
 .game-card-icon {
-    font-size: 4.5rem;
+    font-size: 3.5rem;
     filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .game-card-label {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     font-weight: bold;
     color: #333;
     font-family: inherit;
@@ -2090,31 +2090,31 @@ header p {
 /* Responsive adjustments for Intro Screen */
 @media (max-width: 768px) {
     .intro-logo {
-        max-width: 200px;
-        margin-bottom: 20px;
+        max-width: 160px;
+        margin-bottom: 15px;
     }
 
     .intro-subtitle {
-        font-size: 1.5rem;
-        margin-bottom: 35px;
+        font-size: 1.4rem;
+        margin-bottom: 25px;
     }
 
     .game-grid {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
     }
 
     .game-card {
-        padding: 25px 15px;
-        min-height: 150px;
+        padding: 18px 12px;
+        min-height: 110px;
     }
 
     .game-card-icon {
-        font-size: 3.5rem;
+        font-size: 3rem;
     }
 
     .game-card-label {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
 
     .home-btn {
@@ -2130,9 +2130,13 @@ header p {
 }
 
 @media (max-width: 480px) {
+    .intro-container {
+        padding: 20px 15px;
+    }
+
     .intro-logo {
-        max-width: 180px;
-        margin-bottom: 15px;
+        max-width: 130px;
+        margin-bottom: 10px;
     }
 
     .intro-subtitle {
@@ -2141,20 +2145,22 @@ header p {
 
     .game-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
+        gap: 10px;
+        max-width: 400px;
     }
 
     .game-card {
-        padding: 20px 10px;
-        min-height: 130px;
+        padding: 15px 8px;
+        min-height: 100px;
+        border-radius: 15px;
     }
 
     .game-card-icon {
-        font-size: 3rem;
+        font-size: 2.5rem;
     }
 
     .game-card-label {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
     }
 }
 
