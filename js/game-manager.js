@@ -6,6 +6,7 @@ import { ActionsGame } from './games/actions-game.js';
 import { BoxGame } from './games/box-game.js';
 import { LetterTracingGame } from './games/letter-tracing-game.js';
 import { ParkingGame } from './games/parking-game.js';
+import { HandGame } from './games/hand-game.js';
 
 export class GameManager {
     constructor() {
@@ -17,7 +18,8 @@ export class GameManager {
             actions: null,
             box: null,
             letterTracing: null,
-            parking: null
+            parking: null,
+            hand: null
         };
         this.currentGame = 'alphabet';
     }
@@ -47,6 +49,9 @@ export class GameManager {
 
         this.games.parking = new ParkingGame('parkingGameContainer');
         this.games.parking.init();
+
+        this.games.hand = new HandGame('handFreePlay', 'handQuizMode');
+        this.games.hand.init();
 
         // Setup navigation
         this.setupIntroScreen();
@@ -127,6 +132,12 @@ export class GameManager {
                 document.getElementById('parkingGame').classList.add('active');
                 titleEl.textContent = '🚗 Parkering';
                 subtitleEl.textContent = 'Parker bilerne!';
+                break;
+
+            case 'hand':
+                document.getElementById('handGame').classList.add('active');
+                titleEl.textContent = '✋ Hånd';
+                subtitleEl.textContent = 'Tryk på fingeren for at lære!';
                 break;
 
             default:
