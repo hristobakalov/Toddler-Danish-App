@@ -1,0 +1,29 @@
+/* Main CSS File - Imports all modular stylesheets */
+
+/* Base styles */
+@import url('base.css');
+
+/* Layout components */
+@import url('navigation.css');
+@import url('intro.css');
+
+/* Common game components */
+@import url('common/cards.css');
+@import url('common/buttons.css');
+@import url('common/quiz.css');
+@import url('common/animations.css');
+
+/* Game-specific styles */
+@import url('games/alphabet.css');
+@import url('games/colors.css');
+@import url('games/numbers.css');
+@import url('games/sentences.css');
+@import url('games/actions.css');
+@import url('games/box.css');
+@import url('games/letter-tracing.css');
+@import url('games/parking.css');
+@import url('games/hand.css');
+@import url('games/clothing.css');
+
+/* Responsive styles */
+@import url('responsive.css');

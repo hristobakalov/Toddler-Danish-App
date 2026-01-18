@@ -1,0 +1,150 @@
+}
+
+.quiz-option:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+.quiz-option:active {
+    transform: scale(0.95);
+}
+
+.quiz-option.correct {
+    animation: correctPulse 0.6s ease;
+    border-color: #4CAF50;
+    box-shadow: 0 0 30px #4CAF50;
+}
+
+.quiz-option.incorrect {
+    animation: incorrectShake 0.6s ease;
+    border-color: #f44336;
+    box-shadow: 0 0 30px #f44336;
+}
+
+@keyframes correctPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+@keyframes incorrectShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-15px);
+    }
+    75% {
+        transform: translateX(15px);
+    }
+}
+
+/* Feedback Overlay */
+.feedback-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3000;
+    pointer-events: none;
+}
+
+.feedback-icon {
+    font-size: 15rem;
+    animation: feedbackPop 0.8s ease;
+}
+
+@keyframes feedbackPop {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.3) rotate(10deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+/* Exit Game Button */
+.exit-game-btn {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    font-weight: 900;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: block;
+    margin: 20px auto;
+    transition: all 0.3s ease;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+.exit-game-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.exit-game-btn:active {
+    transform: scale(0.98);
+}
+
+/* Sentences Game Styles */
+#sentencesContainer {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.sentence-card {
+    background: white;
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+    border: 6px solid #fff;
+    text-align: center;
+}
+
+.sentence-gif-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.sentence-gif {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.sentence-display {
+    margin: 30px 0;
+}
+
+.sentence-words {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #333;
+    line-height: 1.6;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+.sentence-word {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+

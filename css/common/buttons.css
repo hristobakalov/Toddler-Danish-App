@@ -1,0 +1,100 @@
+
+.sentence-word.highlight {
+    background: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 100%);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+}
+
+.sentence-speak-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    font-size: 1.8rem;
+    font-weight: 900;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    margin: 20px auto;
+    display: block;
+    transition: all 0.3s ease;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+.sentence-speak-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.sentence-speak-btn:active {
+    transform: scale(0.98);
+}
+
+.sentence-speak-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.sentence-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.sentence-nav-btn {
+    background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    font-weight: 900;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+.sentence-nav-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.sentence-nav-btn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.sentence-nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.sentence-indicator {
+    display: none;
+}
+
+/* Actions Game Styles */
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.action-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}

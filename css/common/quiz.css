@@ -1,0 +1,200 @@
+.action-card:active {
+    transform: scale(0.95);
+}
+
+.action-display {
+    position: relative;
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-gif {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.action-emoji {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 3rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.action-name {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: white;
+    margin: 0;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Actions Quiz Styles */
+.quiz-gif-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.quiz-action-gif {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 5px solid white;
+}
+
+.actions-quiz-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.action-quiz-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 5px solid transparent;
+    min-height: 140px;
+}
+
+.action-quiz-option:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.action-quiz-option:active {
+    transform: scale(0.95);
+}
+
+.action-quiz-option.correct {
+    border-color: #4ade80;
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+}
+
+.action-quiz-option.wrong {
+    border-color: #ef4444;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.quiz-option-emoji {
+    font-size: 3.5rem;
+}
+
+.quiz-option-name {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: white;
+    text-align: center;
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+/* Box Game Styles */
+.box-game-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px;
+    padding: 20px;
+}
+
+.gift-box-container {
+    position: relative;
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
+.gift-box {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    perspective: 1000px;
+}
+
+.box-body {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 250px;
+    background: linear-gradient(135deg, #ff6ec4 0%, #7873f5 100%);
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    border: 8px solid #fff;
+}
+
+.box-lid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(135deg, #ff6ec4 0%, #7873f5 100%);
+    border-radius: 20px 20px 10px 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 8px solid #fff;
+    transform-origin: bottom;
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 10;
+}
+
+.box-lid.open {
+    transform: rotateX(-120deg) translateZ(40px);
+}
+
+.gift-box.opening {
+    animation: boxShake 0.5s ease;
+}
+
+@keyframes boxShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px) rotate(-2deg); }
+    75% { transform: translateX(10px) rotate(2deg); }
+}
+
+.box-ribbon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 100%;
+    background: linear-gradient(90deg, #ffd700 0%, #ffed4e 100%);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.box-bow {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 4rem;
