@@ -2770,8 +2770,8 @@ header p {
 
 .clothing-hotspot {
     position: absolute;
-    width: 70px;
-    height: 70px;
+    width: 56px;
+    height: 56px;
     transform: translate(-50%, -50%);
     background: rgba(255, 255, 255, 0.3);
     border: 3px solid white;
@@ -2811,8 +2811,8 @@ header p {
 }
 
 .quiz-clothing {
-    width: 80px;
-    height: 80px;
+    width: 64px;
+    height: 64px;
     background: rgba(102, 126, 234, 0.4);
     border: 4px solid #667eea;
 }
@@ -2847,13 +2847,13 @@ header p {
     }
 
     .clothing-hotspot {
-        width: 60px;
-        height: 60px;
+        width: 48px;
+        height: 48px;
     }
 
     .quiz-clothing {
-        width: 65px;
-        height: 65px;
+        width: 52px;
+        height: 52px;
     }
 
     .clothing-quiz-container {
@@ -2875,19 +2875,19 @@ header p {
     }
 
     .clothing-hotspot {
-        width: 50px;
-        height: 50px;
+        width: 28px;
+        height: 28px;
         border-width: 2px;
     }
 
     .hotspot-indicator {
-        font-size: 1.5rem;
+        font-size: 1rem;
     }
 
     .quiz-clothing {
-        width: 55px;
-        height: 55px;
-        border-width: 3px;
+        width: 32px;
+        height: 32px;
+        border-width: 2px;
     }
 
     .clothing-quiz-container {
