@@ -8,6 +8,7 @@ import { LetterTracingGame } from './games/letter-tracing-game.js';
 import { ParkingGame } from './games/parking-game.js';
 import { HandGame } from './games/hand-game.js';
 import { ClothingGame } from './games/clothing-game.js';
+import { FoodGame } from './games/food-game.js';
 
 export class GameManager {
     constructor() {
@@ -21,7 +22,8 @@ export class GameManager {
             letterTracing: null,
             parking: null,
             hand: null,
-            clothing: null
+            clothing: null,
+            food: null
         };
         this.currentGame = 'alphabet';
     }
@@ -57,6 +59,9 @@ export class GameManager {
 
         this.games.clothing = new ClothingGame('clothingFreePlay', 'clothingQuizMode');
         this.games.clothing.init();
+
+        this.games.food = new FoodGame('foodFreePlay', 'foodQuizMode');
+        this.games.food.init();
 
         // Setup navigation
         this.setupIntroScreen();
@@ -149,6 +154,12 @@ export class GameManager {
                 document.getElementById('clothingGame').classList.add('active');
                 titleEl.textContent = '👕 Tøj';
                 subtitleEl.textContent = 'Tryk på tøjet for at lære!';
+                break;
+
+            case 'food':
+                document.getElementById('foodGame').classList.add('active');
+                titleEl.textContent = '🍎 Spisetid';
+                subtitleEl.textContent = 'Tryk på maden for at lære!';
                 break;
 
             default:

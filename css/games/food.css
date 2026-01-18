@@ -1,0 +1,136 @@
+/* Food Game Styles */
+
+.foods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.food-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+    border-radius: 25px;
+    padding: 25px 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), 0 0 0 4px rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 5px solid #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.food-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25), 0 0 0 4px rgba(255, 255, 255, 0.5);
+}
+
+.food-card:active {
+    transform: scale(0.96);
+}
+
+.food-emoji {
+    font-size: 4.5rem;
+    text-align: center;
+    line-height: 1;
+}
+
+.food-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #667eea;
+    text-align: center;
+    margin: 0;
+}
+
+/* Quiz Mode Specific Styles */
+.food-quiz-option {
+    background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 5px solid #667eea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.food-quiz-option:hover {
+    transform: scale(1.08);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    border-color: #764ba2;
+}
+
+.quiz-food-emoji {
+    font-size: 5rem;
+    line-height: 1;
+}
+
+.food-quiz-option.correct {
+    background: linear-gradient(145deg, #4CAF50 0%, #45a049 100%);
+    border-color: #4CAF50;
+    pointer-events: none;
+}
+
+.food-quiz-option.incorrect {
+    background: linear-gradient(145deg, #f44336 0%, #da190b 100%);
+    border-color: #f44336;
+    pointer-events: none;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .foods-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 15px;
+    }
+
+    .food-card {
+        padding: 20px 10px;
+    }
+
+    .food-emoji {
+        font-size: 3.5rem;
+    }
+
+    .food-name {
+        font-size: 1.1rem;
+    }
+
+    .quiz-food-emoji {
+        font-size: 4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .foods-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 12px;
+    }
+
+    .food-card {
+        padding: 15px 8px;
+        border-width: 3px;
+    }
+
+    .food-emoji {
+        font-size: 3rem;
+    }
+
+    .food-name {
+        font-size: 1rem;
+    }
+
+    .food-quiz-option {
+        padding: 20px;
+    }
+
+    .quiz-food-emoji {
+        font-size: 3.5rem;
+    }
+}
