@@ -9,6 +9,7 @@ import { ParkingGame } from './games/parking-game.js';
 import { HandGame } from './games/hand-game.js';
 import { ClothingGame } from './games/clothing-game.js';
 import { FoodGame } from './games/food-game.js';
+import { SnakeGame } from './games/snake-game.js';
 
 export class GameManager {
     constructor() {
@@ -23,7 +24,8 @@ export class GameManager {
             parking: null,
             hand: null,
             clothing: null,
-            food: null
+            food: null,
+            snake: null
         };
         this.currentGame = 'alphabet';
     }
@@ -62,6 +64,9 @@ export class GameManager {
 
         this.games.food = new FoodGame('foodFreePlay', 'foodQuizMode');
         this.games.food.init();
+
+        this.games.snake = new SnakeGame('snakeGame');
+        this.games.snake.init();
 
         // Setup navigation
         this.setupIntroScreen();
@@ -160,6 +165,12 @@ export class GameManager {
                 document.getElementById('foodGame').classList.add('active');
                 titleEl.textContent = '🍎 Spisetid';
                 subtitleEl.textContent = 'Tryk på maden for at lære!';
+                break;
+
+            case 'snake':
+                document.getElementById('snakeGame').classList.add('active');
+                titleEl.textContent = '🐍 Slange';
+                subtitleEl.textContent = 'Spis mad og voks større!';
                 break;
 
             default:

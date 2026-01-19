@@ -94,14 +94,12 @@
 .quiz-finger.correct {
     background: rgba(76, 175, 80, 0.7);
     border-color: #4CAF50;
-    animation: correctPulse 0.5s ease;
     pointer-events: none;
 }
 
 .quiz-finger.incorrect {
     background: rgba(244, 67, 54, 0.7);
     border-color: #f44336;
-    animation: shake 0.5s ease;
     pointer-events: none;
 }
 

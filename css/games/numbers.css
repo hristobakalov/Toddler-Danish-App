@@ -10,13 +10,11 @@
 }
 
 .quiz-option.correct {
-    animation: correctPulse 0.6s ease;
     border-color: #4CAF50;
     box-shadow: 0 0 30px #4CAF50;
 }
 
 .quiz-option.incorrect {
-    animation: incorrectShake 0.6s ease;
     border-color: #f44336;
     box-shadow: 0 0 30px #f44336;
 }

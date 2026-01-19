@@ -228,6 +228,9 @@ export class FoodGame {
             element.classList.add('correct');
             AnimationManager.showFeedback('👍', '#4CAF50');
 
+            // Play "Rigtigt" sound
+            this.playAudio('records/rigtigt.mp3');
+
             // Wait then start new round
             setTimeout(() => {
                 if (this.isGameActive) {

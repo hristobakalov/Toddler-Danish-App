@@ -1,0 +1,233 @@
+/* ==================== Snake Game Styles ==================== */
+
+.snake-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-height: 600px;
+    gap: 20px;
+}
+
+/* Start Screen */
+.snake-title {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #667eea;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.snake-instructions {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    text-align: center;
+}
+
+.snake-instructions p {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #333;
+    margin: 15px 0;
+    line-height: 1.6;
+}
+
+/* Game Screen */
+.snake-canvas-wrapper {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+}
+
+#snakeCanvas {
+    display: block;
+    border: 4px solid #667eea;
+    border-radius: 10px;
+    background: #f0f0f0;
+}
+
+.snake-score-display {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 2rem;
+    font-weight: 900;
+    padding: 15px 30px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+.snake-mobile-hint {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #667eea;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Game Over Screen */
+.game-over-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #f44336;
+    text-align: center;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.game-over-emoji {
+    font-size: 8rem;
+    animation: gameOverBounce 1s ease-in-out;
+}
+
+@keyframes gameOverBounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.final-score-display {
+    background: white;
+    border-radius: 20px;
+    padding: 30px 50px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.final-score-display > span:first-child {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #666;
+}
+
+.final-score-number {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #667eea;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .snake-title {
+        font-size: 3rem;
+    }
+
+    .snake-instructions {
+        padding: 20px;
+        max-width: 90%;
+    }
+
+    .snake-instructions p {
+        font-size: 1.1rem;
+        margin: 10px 0;
+    }
+
+    .snake-canvas-wrapper {
+        padding: 10px;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    #snakeCanvas {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .snake-score-display {
+        font-size: 1.5rem;
+        padding: 12px 25px;
+    }
+
+    .game-over-title {
+        font-size: 2.5rem;
+    }
+
+    .game-over-emoji {
+        font-size: 6rem;
+    }
+
+    .final-score-number {
+        font-size: 3rem;
+    }
+
+    .snake-mobile-hint {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .snake-title {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+
+    .snake-instructions {
+        padding: 15px;
+    }
+
+    .snake-instructions p {
+        font-size: 1rem;
+        margin: 8px 0;
+    }
+
+    .snake-canvas-wrapper {
+        padding: 8px;
+    }
+
+    .snake-score-display {
+        font-size: 1.3rem;
+        padding: 10px 20px;
+    }
+
+    .game-over-title {
+        font-size: 2rem;
+    }
+
+    .game-over-emoji {
+        font-size: 5rem;
+    }
+
+    .final-score-display {
+        padding: 20px 30px;
+    }
+
+    .final-score-display > span:first-child {
+        font-size: 1.2rem;
+    }
+
+    .final-score-number {
+        font-size: 2.5rem;
+    }
+
+    .snake-mobile-hint {
+        font-size: 0.9rem;
+        margin-top: 8px;
+    }
+}
+
+/* High Score Display (Optional Enhancement) */
+.high-score-badge {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 800;
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    margin-top: 10px;
+}
