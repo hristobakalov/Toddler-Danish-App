@@ -187,10 +187,17 @@ export class SnakeGame {
                 break;
         }
 
-        // Check wall collision
-        if (head.x < 0 || head.x >= this.gridSize || head.y < 0 || head.y >= this.gridSize) {
-            this.gameOver();
-            return;
+        // Wrap around walls (teleport to opposite side)
+        if (head.x < 0) {
+            head.x = this.gridSize - 1;
+        } else if (head.x >= this.gridSize) {
+            head.x = 0;
+        }
+
+        if (head.y < 0) {
+            head.y = this.gridSize - 1;
+        } else if (head.y >= this.gridSize) {
+            head.y = 0;
         }
 
         // Check self collision
