@@ -46,6 +46,7 @@
     <link rel="stylesheet" href="css/games/clothing.css">
     <link rel="stylesheet" href="css/games/food.css">
     <link rel="stylesheet" href="css/games/snake.css">
+    <link rel="stylesheet" href="css/games/temperature.css">
 
     <!-- Vercel Web Analytics -->
     <script>
@@ -124,6 +125,11 @@
                 <button class="game-card" data-game="snake">
                     <span class="game-card-icon">🐍</span>
                     <span class="game-card-label">Slange</span>
+                </button>
+
+                <button class="game-card" data-game="temperature">
+                    <span class="game-card-icon">🌡️</span>
+                    <span class="game-card-label">Temperatur</span>
                 </button>
             </div>
         </div>
@@ -484,6 +490,57 @@
                 <button class="start-game-btn" id="restartSnakeBtn">
                     🔄 Spil Igen
                 </button>
+            </div>
+        </div>
+
+        <!-- Temperature Game -->
+        <div class="game-content" id="temperatureGame">
+            <div class="temperature-container">
+                <div class="temperature-header">
+                    <h2 class="temperature-title">🌡️ Temperatur</h2>
+                </div>
+
+                <div class="temperature-display-area">
+                    <!-- Temperature Level Display -->
+                    <div class="temp-level-card">
+                        <div class="temp-level-emoji" id="tempLevelEmoji">😊</div>
+                        <div class="temp-level-label" id="tempLevelLabel">Behageligt</div>
+                    </div>
+
+                    <!-- Thermometer -->
+                    <div class="thermometer-wrapper">
+                        <div class="thermometer">
+                            <!-- Scale markings -->
+                            <div class="thermometer-scale">
+                                <div class="scale-mark" style="bottom: 95%"><span>40°</span></div>
+                                <div class="scale-mark" style="bottom: 70%"><span>30°</span></div>
+                                <div class="scale-mark" style="bottom: 45%"><span>20°</span></div>
+                                <div class="scale-mark" style="bottom: 20%"><span>10°</span></div>
+                                <div class="scale-mark" style="bottom: 0%"><span>0°</span></div>
+                            </div>
+
+                            <!-- Thermometer tube -->
+                            <div class="thermometer-tube">
+                                <div class="thermometer-mercury"></div>
+                            </div>
+
+                            <!-- Thermometer bulb -->
+                            <div class="thermometer-bulb">
+                                <div class="thermometer-bulb-inner"></div>
+                            </div>
+                        </div>
+
+                        <!-- Temperature value display -->
+                        <div class="temp-value-display">
+                            <span id="tempDisplay">15°C</span>
+                        </div>
+                    </div>
+
+                    <!-- Interaction hint -->
+                    <div class="temp-keyboard-hint">
+                        Træk eller swipe på termometeret! 👆
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -10,6 +10,7 @@ import { HandGame } from './games/hand-game.js';
 import { ClothingGame } from './games/clothing-game.js';
 import { FoodGame } from './games/food-game.js';
 import { SnakeGame } from './games/snake-game.js';
+import { TemperatureGame } from './games/temperature-game.js';
 
 export class GameManager {
     constructor() {
@@ -25,7 +26,8 @@ export class GameManager {
             hand: null,
             clothing: null,
             food: null,
-            snake: null
+            snake: null,
+            temperature: null
         };
         this.currentGame = 'alphabet';
     }
@@ -67,6 +69,9 @@ export class GameManager {
 
         this.games.snake = new SnakeGame('snakeGame');
         this.games.snake.init();
+
+        this.games.temperature = new TemperatureGame('temperatureGame');
+        this.games.temperature.init();
 
         // Setup navigation
         this.setupIntroScreen();
@@ -171,6 +176,12 @@ export class GameManager {
                 document.getElementById('snakeGame').classList.add('active');
                 titleEl.textContent = '🐍 Slange';
                 subtitleEl.textContent = 'Spis mad og voks større!';
+                break;
+
+            case 'temperature':
+                document.getElementById('temperatureGame').classList.add('active');
+                titleEl.textContent = '🌡️ Temperatur';
+                subtitleEl.textContent = 'Juster temperaturen og lær!';
                 break;
 
             default:
