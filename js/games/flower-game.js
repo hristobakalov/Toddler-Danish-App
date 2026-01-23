@@ -227,8 +227,8 @@ export class FlowerGame {
         if (!this.checkRockCollision(newPos.x, newPos.y)) {
             this.flowerPos = newPos;
 
-            // Animate sprite when moving
-            this.currentFrame = (this.currentFrame + 1) % 3;
+            // Animate sprite when moving (toggle between 0 and 1)
+            this.currentFrame = (this.currentFrame + 1) % 2;
         }
 
         // Check food collision

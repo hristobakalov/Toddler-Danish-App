@@ -5,11 +5,11 @@ export const flowerConfig = {
 
     // Flower settings
     flowerSize: 4,  // 4x4 grid cells
-    flowerImages: ['img/flower1.png', 'img/flower2.png', 'img/flower3.png'],
+    flowerImages: ['img/flower11.png', 'img/flower22.png'],
     animationSpeed: 200,  // ms per frame
 
     // Game speed
-    moveSpeed: 150,  // ms per move
+    moveSpeed: 120,  // ms per move (20% faster than 150ms)
 
     // Food items (12 total)
     foodItems: [
