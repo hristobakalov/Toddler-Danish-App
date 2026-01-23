@@ -14,22 +14,21 @@ export class FlowerGame {
         this.flowerPos = { x: 8, y: 8 };  // Top-left corner
         this.direction = 'right';
         this.nextDirection = 'right';
-        this.currentFrame = 0;  // For sprite animation (0-2)
+        this.currentFrame = 0;  // For sprite animation (0-1)
         this.flowerImages = [];  // Preloaded images
+        this.currentFlowerSize = flowerConfig.initialFlowerSize;  // Start small
+        this.currentMoveSpeed = flowerConfig.initialMoveSpeed;  // Start slow
 
         // Game objects
         this.foodItems = [];  // [{x, y, emoji, points}]
-        this.rocks = [];  // [{x, y}]
         this.bombs = [];  // [{x, y, countdown, exploded, explosionTimer}]
 
         // Timers
         this.moveLoop = null;
-        this.animationLoop = null;
         this.bombSpawnTimer = null;
 
         this.gridSize = flowerConfig.gridSize;
         this.cellSize = flowerConfig.cellSize;
-        this.flowerSize = flowerConfig.flowerSize;
     }
 
     async init() {
@@ -155,22 +154,18 @@ export class FlowerGame {
         this.direction = 'right';
         this.nextDirection = 'right';
         this.currentFrame = 0;
+        this.currentFlowerSize = flowerConfig.initialFlowerSize;
+        this.currentMoveSpeed = flowerConfig.initialMoveSpeed;
 
         // Reset flower position to center
         this.flowerPos = {
-            x: Math.floor(this.gridSize / 2) - Math.floor(this.flowerSize / 2),
-            y: Math.floor(this.gridSize / 2) - Math.floor(this.flowerSize / 2)
+            x: Math.floor(this.gridSize / 2) - Math.floor(this.currentFlowerSize / 2),
+            y: Math.floor(this.gridSize / 2) - Math.floor(this.currentFlowerSize / 2)
         };
 
         // Reset game objects
         this.foodItems = [];
-        this.rocks = [];
         this.bombs = [];
-
-        // Spawn initial rocks
-        for (let i = 0; i < flowerConfig.rockCount; i++) {
-            this.spawnRock();
-        }
 
         // Spawn initial food
         for (let i = 0; i < 5; i++) {
@@ -194,6 +189,7 @@ export class FlowerGame {
         if (!this.isGameRunning) return;
 
         const newPos = { ...this.flowerPos };
+        const flowerSize = Math.floor(this.currentFlowerSize);
 
         switch (direction) {
             case 'up':
@@ -212,24 +208,22 @@ export class FlowerGame {
 
         // Wrap around edges
         if (newPos.x < 0) {
-            newPos.x = this.gridSize - this.flowerSize;
-        } else if (newPos.x + this.flowerSize > this.gridSize) {
+            newPos.x = this.gridSize - flowerSize;
+        } else if (newPos.x + flowerSize > this.gridSize) {
             newPos.x = 0;
         }
 
         if (newPos.y < 0) {
-            newPos.y = this.gridSize - this.flowerSize;
-        } else if (newPos.y + this.flowerSize > this.gridSize) {
+            newPos.y = this.gridSize - flowerSize;
+        } else if (newPos.y + flowerSize > this.gridSize) {
             newPos.y = 0;
         }
 
-        // Check rock collision (if hit, don't move)
-        if (!this.checkRockCollision(newPos.x, newPos.y)) {
-            this.flowerPos = newPos;
+        // Move flower
+        this.flowerPos = newPos;
 
-            // Animate sprite when moving (toggle between 0 and 1)
-            this.currentFrame = (this.currentFrame + 1) % 2;
-        }
+        // Animate sprite when moving (toggle between 0 and 1)
+        this.currentFrame = (this.currentFrame + 1) % 2;
 
         // Check food collision
         this.checkFoodCollision();
@@ -245,32 +239,37 @@ export class FlowerGame {
         this.draw();
     }
 
-    checkRockCollision(newX, newY) {
-        for (let dx = 0; dx < this.flowerSize; dx++) {
-            for (let dy = 0; dy < this.flowerSize; dy++) {
-                const checkX = newX + dx;
-                const checkY = newY + dy;
-                if (this.rocks.some(rock => rock.x === checkX && rock.y === checkY)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     checkFoodCollision() {
+        const flowerSize = Math.floor(this.currentFlowerSize);
+
         for (let i = this.foodItems.length - 1; i >= 0; i--) {
             const food = this.foodItems[i];
 
-            // Check if any part of 4x4 flower overlaps with food
-            for (let dx = 0; dx < this.flowerSize; dx++) {
-                for (let dy = 0; dy < this.flowerSize; dy++) {
+            // Check if any part of flower overlaps with food
+            for (let dx = 0; dx < flowerSize; dx++) {
+                for (let dy = 0; dy < flowerSize; dy++) {
                     if (this.flowerPos.x + dx === food.x &&
                         this.flowerPos.y + dy === food.y) {
                         // Eat food
                         this.score += food.points;
                         this.updateScore();
                         this.foodItems.splice(i, 1);
+
+                        // Grow flower
+                        if (this.currentFlowerSize < flowerConfig.maxFlowerSize) {
+                            this.currentFlowerSize += flowerConfig.flowerGrowthRate;
+                            if (this.currentFlowerSize > flowerConfig.maxFlowerSize) {
+                                this.currentFlowerSize = flowerConfig.maxFlowerSize;
+                            }
+                        }
+
+                        // Increase speed (decrease delay)
+                        if (this.currentMoveSpeed > flowerConfig.minMoveSpeed) {
+                            this.currentMoveSpeed -= flowerConfig.speedIncreaseRate;
+                            if (this.currentMoveSpeed < flowerConfig.minMoveSpeed) {
+                                this.currentMoveSpeed = flowerConfig.minMoveSpeed;
+                            }
+                        }
 
                         // Spawn new food
                         this.spawnFood();
@@ -281,15 +280,28 @@ export class FlowerGame {
         }
     }
 
-    checkExplosionCollision(bombX, bombY) {
-        // Explosion covers 2x2 area
-        for (let dx = 0; dx < this.flowerSize; dx++) {
-            for (let dy = 0; dy < this.flowerSize; dy++) {
+    getExplosionRadius() {
+        // Increase explosion radius based on score
+        if (this.score >= 300) {
+            return 4;  // 4x4 explosion at score 300+
+        } else if (this.score >= 200) {
+            return 3;  // 3x3 explosion at score 200+
+        } else {
+            return 2;  // 2x2 explosion at score < 200
+        }
+    }
+
+    checkExplosionCollisionWithRadius(bombX, bombY, explosionRadius) {
+        const flowerSize = Math.floor(this.currentFlowerSize);
+
+        // Explosion covers variable area based on stored radius
+        for (let dx = 0; dx < flowerSize; dx++) {
+            for (let dy = 0; dy < flowerSize; dy++) {
                 const flowerCellX = this.flowerPos.x + dx;
                 const flowerCellY = this.flowerPos.y + dy;
 
-                if (flowerCellX >= bombX && flowerCellX < bombX + flowerConfig.explosionRadius &&
-                    flowerCellY >= bombY && flowerCellY < bombY + flowerConfig.explosionRadius) {
+                if (flowerCellX >= bombX && flowerCellX < bombX + explosionRadius &&
+                    flowerCellY >= bombY && flowerCellY < bombY + explosionRadius) {
                     return true;
                 }
             }
@@ -327,18 +339,15 @@ export class FlowerGame {
     }
 
     isValidFoodPosition(x, y) {
+        const flowerSize = Math.floor(this.currentFlowerSize);
+
         // Check flower overlap
-        for (let dx = 0; dx < this.flowerSize; dx++) {
-            for (let dy = 0; dy < this.flowerSize; dy++) {
+        for (let dx = 0; dx < flowerSize; dx++) {
+            for (let dy = 0; dy < flowerSize; dy++) {
                 if (this.flowerPos.x + dx === x && this.flowerPos.y + dy === y) {
                     return false;
                 }
             }
-        }
-
-        // Check rock overlap
-        if (this.rocks.some(rock => rock.x === x && rock.y === y)) {
-            return false;
         }
 
         // Check existing food overlap
@@ -348,45 +357,6 @@ export class FlowerGame {
 
         // Check bomb overlap
         if (this.bombs.some(bomb => bomb.x === x && bomb.y === y)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    spawnRock() {
-        let position;
-        let attempts = 0;
-        const maxAttempts = 100;
-
-        do {
-            position = {
-                x: Math.floor(Math.random() * this.gridSize),
-                y: Math.floor(Math.random() * this.gridSize)
-            };
-            attempts++;
-        } while (attempts < maxAttempts && !this.isValidRockPosition(position.x, position.y));
-
-        if (attempts < maxAttempts) {
-            this.rocks.push(position);
-        }
-    }
-
-    isValidRockPosition(x, y) {
-        // Check flower overlap (with margin)
-        const centerX = Math.floor(this.gridSize / 2) - Math.floor(this.flowerSize / 2);
-        const centerY = Math.floor(this.gridSize / 2) - Math.floor(this.flowerSize / 2);
-
-        for (let dx = -1; dx < this.flowerSize + 1; dx++) {
-            for (let dy = -1; dy < this.flowerSize + 1; dy++) {
-                if (centerX + dx === x && centerY + dy === y) {
-                    return false;
-                }
-            }
-        }
-
-        // Check existing rock overlap
-        if (this.rocks.some(rock => rock.x === x && rock.y === y)) {
             return false;
         }
 
@@ -409,14 +379,16 @@ export class FlowerGame {
     spawnBomb() {
         if (!this.isGameRunning) return;
 
+        const explosionRadius = this.getExplosionRadius();
+
         let position;
         let attempts = 0;
         const maxAttempts = 100;
 
         do {
             position = {
-                x: Math.floor(Math.random() * (this.gridSize - flowerConfig.explosionRadius)),
-                y: Math.floor(Math.random() * (this.gridSize - flowerConfig.explosionRadius))
+                x: Math.floor(Math.random() * (this.gridSize - explosionRadius)),
+                y: Math.floor(Math.random() * (this.gridSize - explosionRadius))
             };
             attempts++;
         } while (attempts < maxAttempts && !this.isValidBombPosition(position.x, position.y));
@@ -427,22 +399,26 @@ export class FlowerGame {
                 y: position.y,
                 countdown: flowerConfig.bombCountdown,
                 exploded: false,
-                explosionTimer: 0
+                explosionTimer: 0,
+                explosionRadius: explosionRadius  // Store radius with bomb
             });
         }
     }
 
     isValidBombPosition(x, y) {
+        const flowerSize = Math.floor(this.currentFlowerSize);
+        const explosionRadius = this.getExplosionRadius();
+
         // Check flower overlap with safety margin (2 cells)
         const safetyMargin = 2;
-        for (let dx = -safetyMargin; dx < this.flowerSize + safetyMargin; dx++) {
-            for (let dy = -safetyMargin; dy < this.flowerSize + safetyMargin; dy++) {
+        for (let dx = -safetyMargin; dx < flowerSize + safetyMargin; dx++) {
+            for (let dy = -safetyMargin; dy < flowerSize + safetyMargin; dy++) {
                 const checkX = this.flowerPos.x + dx;
                 const checkY = this.flowerPos.y + dy;
 
                 // Check if bomb area overlaps with flower safety zone
-                for (let bx = 0; bx < flowerConfig.explosionRadius; bx++) {
-                    for (let by = 0; by < flowerConfig.explosionRadius; by++) {
+                for (let bx = 0; bx < explosionRadius; bx++) {
+                    for (let by = 0; by < explosionRadius; by++) {
                         if (x + bx === checkX && y + by === checkY) {
                             return false;
                         }
@@ -451,19 +427,10 @@ export class FlowerGame {
             }
         }
 
-        // Check rock overlap
-        for (let dx = 0; dx < flowerConfig.explosionRadius; dx++) {
-            for (let dy = 0; dy < flowerConfig.explosionRadius; dy++) {
-                if (this.rocks.some(rock => rock.x === x + dx && rock.y === y + dy)) {
-                    return false;
-                }
-            }
-        }
-
         // Check existing bomb overlap
         if (this.bombs.some(bomb =>
-            Math.abs(bomb.x - x) < flowerConfig.explosionRadius &&
-            Math.abs(bomb.y - y) < flowerConfig.explosionRadius)) {
+            Math.abs(bomb.x - x) < explosionRadius &&
+            Math.abs(bomb.y - y) < explosionRadius)) {
             return false;
         }
 
@@ -482,8 +449,8 @@ export class FlowerGame {
                     bomb.exploded = true;
                     bomb.explosionTimer = flowerConfig.explosionDuration;
 
-                    // Check if flower is in blast radius
-                    if (this.checkExplosionCollision(bomb.x, bomb.y)) {
+                    // Check if flower is in blast radius (use stored explosion radius)
+                    if (this.checkExplosionCollisionWithRadius(bomb.x, bomb.y, bomb.explosionRadius)) {
                         this.gameOver();
                     }
                 }
@@ -521,19 +488,10 @@ export class FlowerGame {
             this.ctx.stroke();
         }
 
-        // Draw rocks
+        // Draw food
         this.ctx.font = `${this.cellSize - 4}px Arial`;
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
-        this.rocks.forEach(rock => {
-            this.ctx.fillText(
-                flowerConfig.rockEmoji,
-                rock.x * this.cellSize + this.cellSize / 2,
-                rock.y * this.cellSize + this.cellSize / 2
-            );
-        });
-
-        // Draw food
         this.foodItems.forEach(food => {
             this.ctx.fillText(
                 food.emoji,
@@ -544,36 +502,38 @@ export class FlowerGame {
 
         // Draw bombs
         this.bombs.forEach(bomb => {
+            const radius = bomb.explosionRadius || 2;  // Use stored radius
+
             if (!bomb.exploded) {
-                // Draw large red bomb (2x2 area)
-                this.ctx.font = `${this.cellSize * 2}px Arial`;
+                // Draw large red bomb (size based on explosion radius)
+                this.ctx.font = `${this.cellSize * radius}px Arial`;
                 this.ctx.fillText(
                     flowerConfig.bombEmoji,
-                    bomb.x * this.cellSize + this.cellSize,
-                    bomb.y * this.cellSize + this.cellSize
+                    bomb.x * this.cellSize + (this.cellSize * radius / 2),
+                    bomb.y * this.cellSize + (this.cellSize * radius / 2)
                 );
 
                 // Draw countdown number in center
                 const countdownNumber = Math.ceil(bomb.countdown / 1000);
                 this.ctx.fillStyle = 'white';
-                this.ctx.font = `bold ${this.cellSize * 1.5}px Arial`;
+                this.ctx.font = `bold ${this.cellSize * (radius / 2)}px Arial`;
                 this.ctx.strokeStyle = 'black';
                 this.ctx.lineWidth = 4;
                 this.ctx.strokeText(
                     countdownNumber.toString(),
-                    bomb.x * this.cellSize + this.cellSize,
-                    bomb.y * this.cellSize + this.cellSize
+                    bomb.x * this.cellSize + (this.cellSize * radius / 2),
+                    bomb.y * this.cellSize + (this.cellSize * radius / 2)
                 );
                 this.ctx.fillText(
                     countdownNumber.toString(),
-                    bomb.x * this.cellSize + this.cellSize,
-                    bomb.y * this.cellSize + this.cellSize
+                    bomb.x * this.cellSize + (this.cellSize * radius / 2),
+                    bomb.y * this.cellSize + (this.cellSize * radius / 2)
                 );
                 this.ctx.font = `${this.cellSize - 4}px Arial`;
             } else {
-                // Draw explosion (2x2 area)
-                for (let dx = 0; dx < flowerConfig.explosionRadius; dx++) {
-                    for (let dy = 0; dy < flowerConfig.explosionRadius; dy++) {
+                // Draw explosion (variable size based on radius)
+                for (let dx = 0; dx < radius; dx++) {
+                    for (let dy = 0; dy < radius; dy++) {
                         this.ctx.fillText(
                             flowerConfig.explosionEmoji,
                             (bomb.x + dx) * this.cellSize + this.cellSize / 2,
@@ -584,15 +544,16 @@ export class FlowerGame {
             }
         });
 
-        // Draw flower (4x4 sprite)
+        // Draw flower (variable size sprite)
         const flowerImage = this.flowerImages[this.currentFrame];
         if (flowerImage) {
+            const flowerSize = Math.floor(this.currentFlowerSize);
             this.ctx.drawImage(
                 flowerImage,
                 this.flowerPos.x * this.cellSize,
                 this.flowerPos.y * this.cellSize,
-                this.flowerSize * this.cellSize,
-                this.flowerSize * this.cellSize
+                flowerSize * this.cellSize,
+                flowerSize * this.cellSize
             );
         }
     }

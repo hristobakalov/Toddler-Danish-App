@@ -4,12 +4,16 @@ export const flowerConfig = {
     cellSize: 25,
 
     // Flower settings
-    flowerSize: 4,  // 4x4 grid cells
+    initialFlowerSize: 1,  // Start at 1x1 grid cells
+    maxFlowerSize: 6,  // Maximum 6x6 grid cells
+    flowerGrowthRate: 0.2,  // Grow by 0.2 cells per food eaten
     flowerImages: ['img/flower11.png', 'img/flower22.png'],
     animationSpeed: 200,  // ms per frame
 
     // Game speed
-    moveSpeed: 120,  // ms per move (20% faster than 150ms)
+    initialMoveSpeed: 200,  // Start slower
+    minMoveSpeed: 50,  // Maximum speed (faster)
+    speedIncreaseRate: 5,  // Decrease delay by 5ms per food eaten
 
     // Food items (12 total)
     foodItems: [
@@ -26,10 +30,6 @@ export const flowerConfig = {
         { emoji: '🌽', name: 'Majs', points: 10 },
         { emoji: '🍅', name: 'Tomat', points: 10 }
     ],
-
-    // Obstacles
-    rockEmoji: '🪨',
-    rockCount: 8,  // Number of rocks on the field
 
     // Bombs
     bombEmoji: '🔴',
