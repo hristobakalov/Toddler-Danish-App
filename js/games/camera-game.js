@@ -1,4 +1,5 @@
 import { cameraConfig } from '../data/camera-data.js';
+import { CacheManager } from '../utils/cache-manager.js';
 
 export class CameraGame {
     constructor(containerId) {
@@ -10,6 +11,7 @@ export class CameraGame {
         this.isProcessing = false;
         this.lastDetectedObject = null;
         this.audioElement = null;
+        this.cacheManager = new CacheManager();
     }
 
     init() {
@@ -167,55 +169,115 @@ export class CameraGame {
         }
     }
 
-    processDetectionResults(data) {
+    async processDetectionResults(data) {
         const loadingSpinner = document.getElementById('loadingSpinner');
-        if (loadingSpinner) loadingSpinner.style.display = 'none';
 
         if (!data.responses || !data.responses[0].labelAnnotations) {
+            if (loadingSpinner) loadingSpinner.style.display = 'none';
             this.showError('Ingen objekter fundet. Prøv igen!');
             return;
         }
 
         const labels = data.responses[0].labelAnnotations;
 
-        // Find the best matching label that we have a translation for
-        let bestMatch = null;
-        let highestScore = 0;
+        // Get the best label (highest confidence)
+        const bestLabel = labels[0];
+        const englishWord = bestLabel.description.toLowerCase();
+        const confidence = bestLabel.score;
 
-        for (const label of labels) {
-            const englishLabel = label.description.toLowerCase();
-            const score = label.score;
+        console.log(`🔍 Detected: ${englishWord} (${Math.round(confidence * 100)}% confidence)`);
 
-            // Check if we have a translation for this label
-            if (cameraConfig.translations[englishLabel] && score > highestScore) {
-                bestMatch = {
-                    english: englishLabel,
-                    danish: cameraConfig.translations[englishLabel],
-                    score: score
-                };
-                highestScore = score;
-            }
+        // Step 1: Try to get Danish translation
+        let danishWord = await this.translateToDanish(englishWord);
+
+        if (!danishWord) {
+            if (loadingSpinner) loadingSpinner.style.display = 'none';
+            this.showError('Kunne ikke oversætte ordet. Prøv igen!');
+            return;
         }
 
-        if (!bestMatch) {
-            // Try to find a partial match or use the first label
-            const firstLabel = labels[0].description.toLowerCase();
-            const danishWord = this.findBestTranslation(firstLabel);
+        if (loadingSpinner) loadingSpinner.style.display = 'none';
+
+        // Step 2: Show the result
+        await this.showResult(danishWord, confidence, englishWord);
+    }
+
+    async translateToDanish(englishWord) {
+        // Step 1: Check cache first
+        let danishWord = this.cacheManager.getTranslation(englishWord);
+
+        if (danishWord) {
+            console.log(`✅ Translation from cache: ${englishWord} → ${danishWord}`);
+            return danishWord;
+        }
+
+        // Step 2: Check predefined translations
+        danishWord = this.findBestTranslation(englishWord);
+
+        if (danishWord) {
+            // Cache the predefined translation
+            this.cacheManager.cacheTranslation(englishWord, danishWord);
+            console.log(`✅ Translation from predefined: ${englishWord} → ${danishWord}`);
+            return danishWord;
+        }
+
+        // Step 3: Use Google Translate API
+        try {
+            danishWord = await this.callGoogleTranslate(englishWord);
 
             if (danishWord) {
-                bestMatch = {
-                    english: firstLabel,
-                    danish: danishWord,
-                    score: labels[0].score
-                };
-            } else {
-                this.showError('Jeg kender ikke dette ord endnu. Prøv noget andet!');
-                return;
+                // Cache the API translation
+                this.cacheManager.cacheTranslation(englishWord, danishWord);
+                console.log(`✅ Translation from API: ${englishWord} → ${danishWord}`);
+                return danishWord;
             }
+        } catch (error) {
+            console.error('Translation API error:', error);
         }
 
-        // Show the result
-        this.showResult(bestMatch.danish, bestMatch.score);
+        return null;
+    }
+
+    async callGoogleTranslate(text) {
+        const apiKey = window.GOOGLE_TRANSLATION_API_KEY;
+
+        if (!apiKey) {
+            console.warn('Google Translate API key not found');
+            return null;
+        }
+
+        try {
+            const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    q: text,
+                    source: 'en',
+                    target: 'da',
+                    format: 'text'
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Translation API failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.data && data.data.translations && data.data.translations[0]) {
+                return data.data.translations[0].translatedText;
+            }
+
+            return null;
+
+        } catch (error) {
+            console.error('Error calling Google Translate:', error);
+            return null;
+        }
     }
 
     findBestTranslation(englishWord) {
@@ -234,7 +296,7 @@ export class CameraGame {
         return null;
     }
 
-    showResult(danishWord, confidence) {
+    async showResult(danishWord, confidence, englishWord) {
         const objectName = document.getElementById('detectedObjectName');
         const objectEmoji = document.getElementById('detectedObjectEmoji');
         const confidenceEl = document.getElementById('confidenceLevel');
@@ -244,7 +306,7 @@ export class CameraGame {
         }
 
         if (objectEmoji) {
-            const emoji = cameraConfig.emojis[danishWord] || '📦';
+            const emoji = cameraConfig.emojis[danishWord] || this.getEmojiForEnglish(englishWord) || '📦';
             objectEmoji.textContent = emoji;
         }
 
@@ -255,15 +317,140 @@ export class CameraGame {
 
         this.lastDetectedObject = danishWord;
 
-        // Speak the Danish word
-        this.speakWord(danishWord);
+        // Speak the Danish word using ElevenLabs
+        await this.speakWord(danishWord);
 
         // Add celebration animation
         this.celebrate();
     }
 
-    speakWord(word) {
-        // Try to use browser's Web Speech API with Danish voice
+    getEmojiForEnglish(englishWord) {
+        // Try to find emoji from English word mapping
+        const commonEmojis = {
+            'dog': '🐕', 'cat': '🐱', 'bird': '🐦', 'fish': '🐟',
+            'apple': '🍎', 'banana': '🍌', 'orange': '🍊',
+            'car': '🚗', 'bus': '🚌', 'bicycle': '🚲',
+            'book': '📖', 'phone': '📱', 'computer': '💻',
+            'tree': '🌳', 'flower': '🌸', 'sun': '☀️',
+            'person': '👤', 'baby': '👶', 'child': '👶',
+            'food': '🍽️', 'drink': '🥤', 'bottle': '🍼'
+        };
+
+        return commonEmojis[englishWord.toLowerCase()] || null;
+    }
+
+    async speakWord(word) {
+        try {
+            // Check cache first
+            const cachedAudio = this.cacheManager.getAudio(word);
+
+            if (cachedAudio && cachedAudio.data) {
+                console.log(`🔊 Playing audio from cache: ${word}`);
+                await this.playAudioData(cachedAudio.data);
+                return;
+            }
+
+            // Generate audio using ElevenLabs
+            console.log(`🎙️ Generating audio for: ${word}`);
+            const audioData = await this.generateElevenLabsAudio(word);
+
+            if (audioData) {
+                // Cache the audio
+                this.cacheManager.cacheAudio(word, audioData);
+
+                // Play the audio
+                await this.playAudioData(audioData);
+            } else {
+                // Fallback to browser TTS
+                this.fallbackToWebSpeech(word);
+            }
+
+        } catch (error) {
+            console.error('Error speaking word:', error);
+            // Fallback to browser TTS
+            this.fallbackToWebSpeech(word);
+        }
+    }
+
+    async generateElevenLabsAudio(text) {
+        const apiKey = window.ELEVENLABS_API_KEY;
+        const voiceId = window.ELEVENLABS_VOICE_ID;
+        const modelId = window.ELEVENLABS_MODEL_ID;
+
+        if (!apiKey || !voiceId) {
+            console.warn('ElevenLabs API credentials not found');
+            return null;
+        }
+
+        try {
+            const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'audio/mpeg',
+                    'Content-Type': 'application/json',
+                    'xi-api-key': apiKey
+                },
+                body: JSON.stringify({
+                    text: text,
+                    model_id: modelId,
+                    voice_settings: {
+                        stability: 0.5,
+                        similarity_boost: 0.75,
+                        style: 0.0,
+                        use_speaker_boost: true
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`ElevenLabs API failed: ${response.status}`);
+            }
+
+            // Get audio as blob
+            const audioBlob = await response.blob();
+
+            // Convert to base64 for caching
+            const base64Audio = await this.blobToBase64(audioBlob);
+
+            return base64Audio;
+
+        } catch (error) {
+            console.error('Error generating ElevenLabs audio:', error);
+            return null;
+        }
+    }
+
+    async blobToBase64(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    }
+
+    async playAudioData(base64Data) {
+        return new Promise((resolve, reject) => {
+            if (this.audioElement) {
+                this.audioElement.pause();
+                this.audioElement = null;
+            }
+
+            this.audioElement = new Audio(base64Data);
+            this.audioElement.onended = () => resolve();
+            this.audioElement.onerror = (error) => reject(error);
+
+            this.audioElement.play().catch(error => {
+                console.error('Audio playback error:', error);
+                reject(error);
+            });
+        });
+    }
+
+    fallbackToWebSpeech(word) {
+        // Fallback to browser's Web Speech API with Danish voice
         if ('speechSynthesis' in window) {
             const utterance = new SpeechSynthesisUtterance(word);
             utterance.lang = 'da-DK';
@@ -271,9 +458,6 @@ export class CameraGame {
             utterance.pitch = 1.2; // Higher pitch for children
             window.speechSynthesis.speak(utterance);
         }
-
-        // Also play audio if available (fallback or enhancement)
-        // You can add recorded Danish audio files later
     }
 
     celebrate() {

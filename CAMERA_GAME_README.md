@@ -1,30 +1,41 @@
 # 📷 Camera Game - Kamera Spil
 
-The Camera Game uses Google Cloud Vision API to recognize objects in real-time and teach Danish words to toddlers.
+The Camera Game uses AI vision and translation APIs to recognize ANY object in real-time and teach Danish words with high-quality pronunciation.
 
 ## Features
 
 - ✅ Opens back camera on mobile devices
 - ✅ Takes photos of objects
-- ✅ Uses AI to recognize objects
-- ✅ Translates object names to Danish
-- ✅ Speaks the Danish word using Text-to-Speech
+- ✅ Uses **Google Vision API** to recognize objects
+- ✅ **Automatically translates ANY word** to Danish using Google Translate API
+- ✅ **High-quality Danish pronunciation** using ElevenLabs AI voice
+- ✅ **Smart caching system** - saves translations and audio locally
 - ✅ Shows emoji representation of the object
 - ✅ Displays confidence level
+- ✅ Works offline for cached words
 
 ## How It Works
 
 1. **User taps "Åbn Kamera"** - Requests camera permission
 2. **Camera opens** - Shows live video feed from back camera
-3. **User points at an object and taps capture button**
+3. **User points at an object and taps capture button** 📸
 4. **Photo is sent to Google Vision API** - AI analyzes the image
-5. **Object is identified** - Returns labels with confidence scores
-6. **Translation** - Converts English label to Danish
-7. **Display & Speech** - Shows Danish word with emoji and speaks it
+5. **Object is identified** - Returns English labels with confidence scores
+6. **Smart Translation**:
+   - First checks local cache (instant! ⚡)
+   - Then checks predefined translations
+   - Finally uses Google Translate API for new words
+7. **High-Quality Audio**:
+   - Checks audio cache first (instant!)
+   - Generates Danish pronunciation using ElevenLabs AI voice
+   - Caches audio for future use
+8. **Display & Speech** - Shows Danish word with emoji and speaks it beautifully!
 
 ## Supported Objects
 
-The game recognizes 150+ common objects including:
+**The game can recognize and translate ANY object!** 🎉
+
+Thanks to Google Translate API, the camera game is not limited to predefined words. However, we have 150+ pre-optimized translations for common objects:
 
 ### Categories
 - 🐕 Animals (dog/hund, cat/kat, bird/fugl, etc.)
@@ -37,14 +48,32 @@ The game recognizes 150+ common objects including:
 
 ## API Setup
 
-The game requires Google Cloud Vision API credentials. The API key is already configured in:
-- `.env` file: `GOOGLE_VISION_API_KEY`
-- `js/config.js`: Loads the API key into the browser
+The game uses three APIs, all configured in `.env` and loaded via `js/config.js`:
 
-### API Costs
-- **Free tier**: 1,000 requests per month
-- **After free tier**: Very affordable pricing
-- **No charges** unless you exceed the free quota
+### 1. Google Cloud Vision API
+- **Purpose**: Object recognition from photos
+- **Key**: `GOOGLE_VISION_API_KEY`
+- **Free tier**: 1,000 requests/month
+- **Cost**: Very affordable after free tier
+
+### 2. Google Translate API
+- **Purpose**: Translates English object names to Danish
+- **Key**: `GOOGLE_TRANSLATION_API_KEY`
+- **Free tier**: First 500,000 characters/month are free
+- **Cost**: $20 per million characters after
+
+### 3. ElevenLabs Text-to-Speech API
+- **Purpose**: High-quality Danish pronunciation
+- **Keys**: `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID`, `ELEVENLABS_MODEL_ID`
+- **Free tier**: 10,000 characters/month
+- **Cost**: Very affordable paid plans
+
+### Smart Caching = Minimal API Costs
+The game caches both **translations** and **audio** locally using `localStorage`:
+- First time: Uses all 3 APIs
+- Repeat words: Instant playback from cache! ⚡
+- Cache persists across sessions
+- Typical toddler vocabulary: ~100-200 words = mostly cached after first use!
 
 ### Security Note
 ⚠️ The API key is currently loaded client-side for development. For production:
@@ -57,16 +86,47 @@ The game requires Google Cloud Vision API credentials. The API key is already co
 ```
 js/
   ├── data/
-  │   └── camera-data.js       # Translations & emoji mappings
+  │   └── camera-data.js       # Predefined translations & emoji mappings
   ├── games/
-  │   └── camera-game.js       # Main game logic
-  └── config.js                # API key loader
+  │   └── camera-game.js       # Main game logic with Vision + Translate + TTS
+  ├── utils/
+  │   └── cache-manager.js     # Smart caching for translations & audio
+  └── config.js                # API key loader (3 APIs)
 
 css/
   └── games/
       └── camera.css           # Game styling
 
 index.html                     # Camera game HTML sections
+```
+
+## Caching System
+
+The `CacheManager` class (`js/utils/cache-manager.js`) provides:
+
+### Translation Cache
+- Stores English → Danish word pairs
+- Persists in `localStorage` under `camera_translations`
+- Instant lookup for repeated words
+
+### Audio Cache
+- Stores ElevenLabs-generated audio as base64
+- Persists in `localStorage` under `camera_audio`
+- Includes timestamp for cache management
+- Auto-cleanup of entries older than 30 days
+
+### Cache Statistics
+Access cache stats in browser console:
+```javascript
+// In browser console after playing the game:
+const game = gameManager.games.camera;
+console.log(game.cacheManager.getStats());
+// Output: { translations: 45, audioFiles: 45 }
+```
+
+### Clear Cache
+```javascript
+game.cacheManager.clearAll();
 ```
 
 ## How to Test
@@ -89,7 +149,14 @@ If the API:
 
 ## Text-to-Speech
 
-Uses browser's built-in `speechSynthesis` API:
+### Primary: ElevenLabs AI Voice
+- **High-quality** natural-sounding Danish
+- **Consistent pronunciation** for all words
+- **Child-friendly** voice settings
+- **Cached** for instant replay
+
+### Fallback: Browser Web Speech
+If ElevenLabs fails, uses browser's `speechSynthesis`:
 - Language: Danish (da-DK)
 - Rate: 0.8x (slower for toddlers)
 - Pitch: 1.2x (higher for children)

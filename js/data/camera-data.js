@@ -1,5 +1,7 @@
 export const cameraConfig = {
     // English to Danish translations for common objects
+    // Note: These are fallback translations. The game uses Google Translate API
+    // for any word not in this list, with caching for repeated words.
     translations: {
         // Animals
         'dog': 'Hund',
