@@ -12,6 +12,7 @@ import { FoodGame } from './games/food-game.js';
 import { SnakeGame } from './games/snake-game.js';
 import { TemperatureGame } from './games/temperature-game.js';
 import { FlowerGame } from './games/flower-game.js';
+import { CameraGame } from './games/camera-game.js';
 
 export class GameManager {
     constructor() {
@@ -29,7 +30,8 @@ export class GameManager {
             food: null,
             snake: null,
             temperature: null,
-            flower: null
+            flower: null,
+            camera: null
         };
         this.currentGame = 'alphabet';
     }
@@ -77,6 +79,9 @@ export class GameManager {
 
         this.games.flower = new FlowerGame('flowerGame');
         this.games.flower.init();
+
+        this.games.camera = new CameraGame('cameraGame');
+        this.games.camera.init();
 
         // Setup navigation
         this.setupIntroScreen();
@@ -193,6 +198,12 @@ export class GameManager {
                 document.getElementById('flowerGame').classList.add('active');
                 titleEl.textContent = '🌸 Blomst';
                 subtitleEl.textContent = 'Saml frugt og undgå bomber!';
+                break;
+
+            case 'camera':
+                document.getElementById('cameraGame').classList.add('active');
+                titleEl.textContent = '📷 Kamera';
+                subtitleEl.textContent = 'Tag et billede og lær dansk!';
                 break;
 
             default:

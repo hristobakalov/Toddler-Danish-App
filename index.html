@@ -48,6 +48,7 @@
     <link rel="stylesheet" href="css/games/snake.css">
     <link rel="stylesheet" href="css/games/temperature.css">
     <link rel="stylesheet" href="css/games/flower.css">
+    <link rel="stylesheet" href="css/games/camera.css">
 
     <!-- Vercel Web Analytics -->
     <script>
@@ -136,6 +137,11 @@
                 <button class="game-card" data-game="flower">
                     <span class="game-card-icon">🌸</span>
                     <span class="game-card-label">Blomst</span>
+                </button>
+
+                <button class="game-card" data-game="camera">
+                    <span class="game-card-icon">📷</span>
+                    <span class="game-card-label">Kamera</span>
                 </button>
             </div>
         </div>
@@ -589,7 +595,51 @@
                 </button>
             </div>
         </div>
+
+        <!-- Camera Game -->
+        <div class="game-content" id="cameraGame">
+            <!-- Start Screen -->
+            <div id="cameraStartScreen" class="camera-screen">
+                <div class="camera-title">📷 Kamera Spil</div>
+                <div class="camera-instructions">
+                    <p>Tag et billede af noget omkring dig!</p>
+                    <p>Jeg vil genkende objektet og sige det på dansk! 🗣️</p>
+                    <p>Prøv med frugter, legetøj, møbler og meget mere!</p>
+                </div>
+                <button class="start-game-btn" id="startCameraBtn">
+                    📸 Åbn Kamera
+                </button>
+            </div>
+
+            <!-- Camera Active Screen -->
+            <div id="cameraActiveScreen" class="camera-screen" style="display: none;">
+                <div class="camera-video-wrapper">
+                    <video id="cameraVideo" autoplay playsinline></video>
+                </div>
+                <button class="capture-button" id="capturePhotoBtn">
+                    📸
+                </button>
+                <div class="camera-hint">Peg på noget og tryk på knappen! 👆</div>
+                <canvas id="captureCanvas"></canvas>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="cameraResultScreen" class="camera-screen" style="display: none;">
+                <div class="result-card">
+                    <div class="detected-object-emoji" id="detectedObjectEmoji">🔍</div>
+                    <div class="detected-object-name" id="detectedObjectName">Analyserer...</div>
+                    <div class="confidence-level" id="confidenceLevel"></div>
+                    <div class="loading-spinner" id="loadingSpinner" style="display: none;"></div>
+                    <button class="retry-button" id="retryCameraBtn">
+                        📷 Tag Et Nyt Billede
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Load configuration and API keys -->
+    <script type="module" src="js/config.js"></script>
 
     <script type="module" src="js/main.js"></script>
 </body>

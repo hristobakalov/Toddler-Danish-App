@@ -40,7 +40,7 @@ export const flowerConfig = {
     explosionDuration: 500,  // ms
 
     // Food spawning
-    maxFoodItems: 5,  // Max food items on field at once
+    maxFoodItems: 8,  // Max food items on field at once
 
     // Controls
     controls: {
