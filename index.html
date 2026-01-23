@@ -47,6 +47,7 @@
     <link rel="stylesheet" href="css/games/food.css">
     <link rel="stylesheet" href="css/games/snake.css">
     <link rel="stylesheet" href="css/games/temperature.css">
+    <link rel="stylesheet" href="css/games/flower.css">
 
     <!-- Vercel Web Analytics -->
     <script>
@@ -130,6 +131,11 @@
                 <button class="game-card" data-game="temperature">
                     <span class="game-card-icon">🌡️</span>
                     <span class="game-card-label">Temperatur</span>
+                </button>
+
+                <button class="game-card" data-game="flower">
+                    <span class="game-card-icon">🌸</span>
+                    <span class="game-card-label">Blomst</span>
                 </button>
             </div>
         </div>
@@ -541,6 +547,46 @@
                         Træk eller swipe på termometeret! 👆
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Flower Game -->
+        <div class="game-content" id="flowerGame">
+            <!-- Start Screen -->
+            <div id="flowerStartScreen" class="flower-screen">
+                <div class="flower-title">🌸 Blomst Spil</div>
+                <div class="flower-instructions">
+                    <p>Brug piletasterne eller swipe for at flytte blomsten!</p>
+                    <p>Spis frugt og grøntsager! 🍎🥕</p>
+                    <p>Undgå klipper og bomber! 🪨💣</p>
+                </div>
+                <button class="start-game-btn" id="startFlowerBtn">
+                    🎮 Start Spil
+                </button>
+            </div>
+
+            <!-- Game Screen -->
+            <div id="flowerGameScreen" class="flower-screen" style="display: none;">
+                <div class="flower-score-display">
+                    <span>Score: <span id="flowerScore">0</span></span>
+                </div>
+                <div class="flower-canvas-wrapper">
+                    <canvas id="flowerCanvas"></canvas>
+                </div>
+                <div class="flower-mobile-hint">Swipe på skærmen for at styre! 👆</div>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div id="flowerGameOver" class="flower-screen" style="display: none;">
+                <div class="game-over-title">Spil Slut!</div>
+                <div class="game-over-emoji">💥</div>
+                <div class="final-score-display">
+                    <span>Din Score:</span>
+                    <span class="final-score-number" id="flowerFinalScore">0</span>
+                </div>
+                <button class="start-game-btn" id="restartFlowerBtn">
+                    🔄 Spil Igen
+                </button>
             </div>
         </div>
     </div>

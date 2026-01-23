@@ -1,0 +1,227 @@
+/* ==================== Flower Game Styles ==================== */
+
+.flower-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-height: 600px;
+    gap: 20px;
+}
+
+/* Start Screen */
+.flower-title {
+    font-size: 4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.flower-instructions {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    text-align: center;
+}
+
+.flower-instructions p {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #333;
+    margin: 15px 0;
+    line-height: 1.6;
+}
+
+/* Game Screen */
+.flower-canvas-wrapper {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+}
+
+#flowerCanvas {
+    display: block;
+    border: 4px solid #ec4899;
+    border-radius: 10px;
+    background: #f0f0f0;
+}
+
+.flower-score-display {
+    background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+    color: white;
+    font-size: 2rem;
+    font-weight: 900;
+    padding: 15px 30px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+.flower-mobile-hint {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ec4899;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Game Over Screen */
+.game-over-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #f44336;
+    text-align: center;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.game-over-emoji {
+    font-size: 8rem;
+    animation: gameOverBounce 1s ease-in-out;
+}
+
+@keyframes gameOverBounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.final-score-display {
+    background: white;
+    border-radius: 20px;
+    padding: 30px 50px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.final-score-display > span:first-child {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #666;
+}
+
+.final-score-number {
+    font-size: 4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .flower-title {
+        font-size: 3rem;
+    }
+
+    .flower-instructions {
+        padding: 20px;
+        max-width: 90%;
+    }
+
+    .flower-instructions p {
+        font-size: 1.1rem;
+        margin: 10px 0;
+    }
+
+    .flower-canvas-wrapper {
+        padding: 10px;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    #flowerCanvas {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .flower-score-display {
+        font-size: 1.5rem;
+        padding: 12px 25px;
+    }
+
+    .game-over-title {
+        font-size: 2.5rem;
+    }
+
+    .game-over-emoji {
+        font-size: 6rem;
+    }
+
+    .final-score-number {
+        font-size: 3rem;
+    }
+
+    .flower-mobile-hint {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .flower-title {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+
+    .flower-instructions {
+        padding: 15px;
+    }
+
+    .flower-instructions p {
+        font-size: 1rem;
+        margin: 8px 0;
+    }
+
+    .flower-canvas-wrapper {
+        padding: 8px;
+    }
+
+    .flower-score-display {
+        font-size: 1.3rem;
+        padding: 10px 20px;
+    }
+
+    .game-over-title {
+        font-size: 2rem;
+    }
+
+    .game-over-emoji {
+        font-size: 5rem;
+    }
+
+    .final-score-display {
+        padding: 20px 30px;
+    }
+
+    .final-score-display > span:first-child {
+        font-size: 1.2rem;
+    }
+
+    .final-score-number {
+        font-size: 2.5rem;
+    }
+
+    .flower-mobile-hint {
+        font-size: 0.9rem;
+        margin-top: 8px;
+    }
+}

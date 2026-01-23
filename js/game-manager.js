@@ -11,6 +11,7 @@ import { ClothingGame } from './games/clothing-game.js';
 import { FoodGame } from './games/food-game.js';
 import { SnakeGame } from './games/snake-game.js';
 import { TemperatureGame } from './games/temperature-game.js';
+import { FlowerGame } from './games/flower-game.js';
 
 export class GameManager {
     constructor() {
@@ -27,7 +28,8 @@ export class GameManager {
             clothing: null,
             food: null,
             snake: null,
-            temperature: null
+            temperature: null,
+            flower: null
         };
         this.currentGame = 'alphabet';
     }
@@ -72,6 +74,9 @@ export class GameManager {
 
         this.games.temperature = new TemperatureGame('temperatureGame');
         this.games.temperature.init();
+
+        this.games.flower = new FlowerGame('flowerGame');
+        this.games.flower.init();
 
         // Setup navigation
         this.setupIntroScreen();
@@ -182,6 +187,12 @@ export class GameManager {
                 document.getElementById('temperatureGame').classList.add('active');
                 titleEl.textContent = '🌡️ Temperatur';
                 subtitleEl.textContent = 'Juster temperaturen og lær!';
+                break;
+
+            case 'flower':
+                document.getElementById('flowerGame').classList.add('active');
+                titleEl.textContent = '🌸 Blomst';
+                subtitleEl.textContent = 'Saml frugt og undgå bomber!';
                 break;
 
             default:
