@@ -32,6 +32,7 @@ export class CameraGame {
         const startBtn = document.getElementById('startCameraBtn');
         const captureBtn = document.getElementById('capturePhotoBtn');
         const retryBtn = document.getElementById('retryCameraBtn');
+        const playSoundBtn = document.getElementById('playSoundBtn');
 
         if (startBtn) {
             startBtn.addEventListener('click', () => this.startCamera());
@@ -44,6 +45,10 @@ export class CameraGame {
         if (retryBtn) {
             retryBtn.addEventListener('click', () => this.resetCamera());
         }
+
+        if (playSoundBtn) {
+            playSoundBtn.addEventListener('click', () => this.replaySound());
+        }
     }
 
     showStartScreen() {
@@ -54,6 +59,11 @@ export class CameraGame {
 
     async startCamera() {
         try {
+            // Check if mediaDevices is supported
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                throw new Error('Camera access is not supported. Please use HTTPS or localhost.');
+            }
+
             // Request back camera access
             const constraints = {
                 video: {
@@ -78,7 +88,18 @@ export class CameraGame {
 
         } catch (error) {
             console.error('Error accessing camera:', error);
-            this.showError('Kunne ikke tilgå kameraet. Giv venligst tilladelse.');
+
+            let errorMessage = 'Kunne ikke tilgå kameraet.';
+
+            if (error.message && error.message.includes('HTTPS')) {
+                errorMessage = 'Kamera kræver HTTPS eller localhost!';
+            } else if (error.name === 'NotAllowedError') {
+                errorMessage = 'Giv venligst kamera tilladelse i browseren.';
+            } else if (error.name === 'NotFoundError') {
+                errorMessage = 'Intet kamera fundet på denne enhed.';
+            }
+
+            alert(errorMessage);
         }
     }
 
@@ -347,6 +368,9 @@ export class CameraGame {
             if (cachedAudio && cachedAudio.data) {
                 console.log(`🔊 Playing audio from cache: ${word}`);
                 await this.playAudioData(cachedAudio.data);
+
+                // Show play button after audio playback
+                this.showPlaySoundButton();
                 return;
             }
 
@@ -360,15 +384,24 @@ export class CameraGame {
 
                 // Play the audio
                 await this.playAudioData(audioData);
+
+                // Show play button after audio playback
+                this.showPlaySoundButton();
             } else {
                 // Fallback to browser TTS
                 this.fallbackToWebSpeech(word);
+
+                // Show play button after fallback
+                this.showPlaySoundButton();
             }
 
         } catch (error) {
             console.error('Error speaking word:', error);
             // Fallback to browser TTS
             this.fallbackToWebSpeech(word);
+
+            // Show play button after fallback
+            this.showPlaySoundButton();
         }
     }
 
@@ -481,7 +514,38 @@ export class CameraGame {
         if (objectEmoji) objectEmoji.textContent = '❌';
     }
 
+    showPlaySoundButton() {
+        const playSoundBtn = document.getElementById('playSoundBtn');
+        if (playSoundBtn) {
+            playSoundBtn.style.display = 'block';
+        }
+    }
+
+    async replaySound() {
+        if (!this.lastDetectedObject) return;
+
+        const btn = document.getElementById('playSoundBtn');
+        if (btn) {
+            btn.classList.add('playing');
+        }
+
+        await this.speakWord(this.lastDetectedObject);
+
+        if (btn) {
+            // Remove animation after it completes
+            setTimeout(() => {
+                btn.classList.remove('playing');
+            }, 800);
+        }
+    }
+
     resetCamera() {
+        // Hide play sound button
+        const playSoundBtn = document.getElementById('playSoundBtn');
+        if (playSoundBtn) {
+            playSoundBtn.style.display = 'none';
+        }
+
         // Go back to camera view
         document.getElementById('cameraResultScreen').style.display = 'none';
         document.getElementById('cameraActiveScreen').style.display = 'flex';
