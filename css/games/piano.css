@@ -1,0 +1,579 @@
+/* ==================== Piano Game Styles ==================== */
+
+.piano-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    min-height: 600px;
+    gap: 20px;
+}
+
+/* Mode Selection Screen */
+.piano-mode-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #667eea;
+    text-align: center;
+    margin-bottom: 30px;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.piano-mode-options {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 900px;
+}
+
+.piano-mode-btn {
+    background: white;
+    border: 6px solid #667eea;
+    border-radius: 30px;
+    padding: 40px 30px;
+    min-width: 300px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.piano-mode-btn:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    border-color: #764ba2;
+}
+
+.piano-mode-btn:active {
+    transform: scale(0.98);
+}
+
+.mode-icon {
+    font-size: 5rem;
+}
+
+.mode-name {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #667eea;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+.mode-desc {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #666;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* Piano Header */
+.piano-header {
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    border-radius: 20px;
+    padding: 20px 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.piano-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #667eea;
+    margin: 0;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+.piano-score-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.score-label {
+    color: #666;
+}
+
+.score-value {
+    color: #667eea;
+    font-size: 2.5rem;
+    font-weight: 900;
+}
+
+/* Teaching Info */
+.teaching-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.song-name-display {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #764ba2;
+    text-align: center;
+}
+
+.progress-display {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #666;
+}
+
+.progress-display span {
+    color: #667eea;
+    font-weight: 900;
+}
+
+.teaching-hint {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #FF6B6B;
+    text-align: center;
+    padding: 15px 25px;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 15px;
+    animation: hintPulse 2s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Piano Keyboard Wrapper */
+.piano-keyboard-wrapper {
+    background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
+    border-radius: 25px;
+    padding: 40px 30px 30px 30px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    border: 8px solid #654321;
+    width: 100%;
+    max-width: 900px;
+}
+
+/* Horizontal Piano Layout */
+.piano-keyboard {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 280px;
+    user-select: none;
+    width: 100%;
+}
+
+/* White Keys */
+.piano-key.white-key {
+    position: relative;
+    width: 60px;
+    height: 280px;
+    background: linear-gradient(to bottom, #ffffff 0%, #f5f5f5 100%);
+    border: 3px solid #222;
+    border-radius: 0 0 8px 8px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.piano-key.white-key:hover {
+    background: linear-gradient(to bottom, #f0f0f0 0%, #e5e5e5 100%);
+}
+
+.piano-key.white-key:active,
+.piano-key.white-key.pressed {
+    background: linear-gradient(to bottom, #e0e0e0 0%, #d0d0d0 100%);
+    transform: translateY(2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Black Keys */
+.piano-key.black-key {
+    position: absolute;
+    width: 38px;
+    height: 170px;
+    background: linear-gradient(to bottom, #222 0%, #000 100%);
+    border: 2px solid #000;
+    border-radius: 0 0 6px 6px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+.piano-key.black-key:hover {
+    background: linear-gradient(to bottom, #333 0%, #111 100%);
+}
+
+.piano-key.black-key:active,
+.piano-key.black-key.pressed {
+    background: linear-gradient(to bottom, #444 0%, #222 100%);
+    transform: translateY(2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Position black keys between white keys */
+.piano-key.black-key[data-note="C#4"] { left: 42px; }
+.piano-key.black-key[data-note="D#4"] { left: 105px; }
+.piano-key.black-key[data-note="F#4"] { left: 231px; }
+.piano-key.black-key[data-note="G#4"] { left: 294px; }
+.piano-key.black-key[data-note="A#4"] { left: 357px; }
+
+/* Highlighted Key (Teaching Mode) */
+.piano-key.highlighted {
+    animation: highlightGlow 1.5s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(173, 216, 230, 0.6), 0 0 30px rgba(173, 216, 230, 0.4) !important;
+    z-index: 10 !important;
+}
+
+.piano-key.white-key.highlighted {
+    background: linear-gradient(to bottom, #B0E0E6 0%, #87CEEB 100%) !important;
+    border-color: #87CEEB !important;
+}
+
+.piano-key.black-key.highlighted {
+    background: linear-gradient(to bottom, #4682B4 0%, #5F9EA0 100%) !important;
+    border-color: #4682B4 !important;
+}
+
+@keyframes highlightGlow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(173, 216, 230, 0.6), 0 0 30px rgba(173, 216, 230, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(173, 216, 230, 0.8), 0 0 35px rgba(173, 216, 230, 0.5);
+    }
+}
+
+/* Success Animation */
+.piano-key.success {
+    animation: successBounce 0.6s ease;
+}
+
+@keyframes successBounce {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    75% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Error Animation */
+.piano-key.error {
+    animation: errorShake 0.4s ease;
+}
+
+@keyframes errorShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* Celebration */
+.piano-celebration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.celebration-emoji {
+    font-size: 12rem;
+    animation: celebrationBounce 0.8s ease;
+}
+
+@keyframes celebrationBounce {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+    }
+    25% {
+        transform: scale(1.3) rotate(-10deg);
+    }
+    50% {
+        transform: scale(1.2) rotate(10deg);
+    }
+    75% {
+        transform: scale(1.3) rotate(-5deg);
+    }
+}
+
+.celebration-text {
+    font-size: 4rem;
+    font-weight: 900;
+    color: white;
+    text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+/* Buttons */
+.next-song-btn {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    font-size: 1.8rem;
+    font-weight: 900;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+}
+
+.next-song-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.next-song-btn:active {
+    transform: scale(0.98);
+}
+
+.back-to-mode-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    font-weight: 900;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+    margin-top: 20px;
+}
+
+.back-to-mode-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.back-to-mode-btn:active {
+    transform: scale(0.98);
+}
+
+.teaching-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .piano-mode-title {
+        font-size: 2.8rem;
+    }
+
+    .piano-mode-options {
+        gap: 20px;
+    }
+
+    .piano-mode-btn {
+        min-width: 250px;
+        padding: 30px 20px;
+    }
+
+    .mode-icon {
+        font-size: 4rem;
+    }
+
+    .mode-name {
+        font-size: 1.8rem;
+    }
+
+    .mode-desc {
+        font-size: 1.1rem;
+    }
+
+    .piano-title {
+        font-size: 2rem;
+    }
+
+    /* Wider piano for tablets */
+    .piano-keyboard-wrapper {
+        width: 85%;
+        max-width: none;
+    }
+
+    .piano-keyboard {
+        height: 220px;
+    }
+
+    .piano-key.white-key {
+        width: 50px;
+        height: 220px;
+    }
+
+    .piano-key.black-key {
+        width: 32px;
+        height: 140px;
+    }
+
+    .piano-key.black-key[data-note="C#4"] { left: 35px; }
+    .piano-key.black-key[data-note="D#4"] { left: 87px; }
+    .piano-key.black-key[data-note="F#4"] { left: 192px; }
+    .piano-key.black-key[data-note="G#4"] { left: 244px; }
+    .piano-key.black-key[data-note="A#4"] { left: 297px; }
+
+    .celebration-emoji {
+        font-size: 10rem;
+    }
+
+    .celebration-text {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .piano-screen {
+        padding: 0;
+    }
+
+    .piano-mode-title {
+        font-size: 2.2rem;
+    }
+
+    .piano-mode-btn {
+        min-width: 200px;
+        padding: 25px 15px;
+    }
+
+    .mode-icon {
+        font-size: 3.5rem;
+    }
+
+    .mode-name {
+        font-size: 1.5rem;
+    }
+
+    .mode-desc {
+        font-size: 1rem;
+    }
+
+    .piano-title {
+        font-size: 1.8rem;
+    }
+
+    /* 100% width piano for mobile with less padding */
+    .piano-keyboard-wrapper {
+        width: 100%;
+        max-width: none;
+        padding: 15px 10px 10px 10px;
+        border: 4px solid #654321;
+    }
+
+    .piano-keyboard {
+        height: 200px;
+    }
+
+    .piano-key.white-key {
+        width: 48px;
+        height: 200px;
+    }
+
+    .piano-key.black-key {
+        width: 32px;
+        height: 130px;
+    }
+
+    .piano-key.black-key[data-note="C#4"] { left: 32px; }
+    .piano-key.black-key[data-note="D#4"] { left: 80px; }
+    .piano-key.black-key[data-note="F#4"] { left: 176px; }
+    .piano-key.black-key[data-note="G#4"] { left: 224px; }
+    .piano-key.black-key[data-note="A#4"] { left: 272px; }
+
+    .teaching-hint {
+        font-size: 1.2rem;
+        padding: 12px 20px;
+    }
+
+    .celebration-emoji {
+        font-size: 8rem;
+    }
+
+    .celebration-text {
+        font-size: 2.5rem;
+    }
+
+    .next-song-btn {
+        font-size: 1.5rem;
+        padding: 15px 30px;
+    }
+
+    .back-to-mode-btn {
+        font-size: 1.3rem;
+        padding: 12px 25px;
+    }
+}
+
+/* Accessibility - Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .piano-key,
+    .piano-mode-btn,
+    .next-song-btn,
+    .back-to-mode-btn {
+        transition: none;
+    }
+
+    .piano-key.highlighted,
+    .teaching-hint,
+    .celebration-emoji {
+        animation: none;
+    }
+}

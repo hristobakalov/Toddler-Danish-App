@@ -13,6 +13,7 @@ import { SnakeGame } from './games/snake-game.js';
 import { TemperatureGame } from './games/temperature-game.js';
 import { FlowerGame } from './games/flower-game.js';
 import { CameraGame } from './games/camera-game.js';
+import { PianoGame } from './games/piano-game.js';
 
 export class GameManager {
     constructor() {
@@ -31,7 +32,8 @@ export class GameManager {
             snake: null,
             temperature: null,
             flower: null,
-            camera: null
+            camera: null,
+            piano: null
         };
         this.currentGame = 'alphabet';
     }
@@ -82,6 +84,9 @@ export class GameManager {
 
         this.games.camera = new CameraGame('cameraGame');
         this.games.camera.init();
+
+        this.games.piano = new PianoGame('pianoGame');
+        this.games.piano.init();
 
         // Setup navigation
         this.setupIntroScreen();
@@ -204,6 +209,12 @@ export class GameManager {
                 document.getElementById('cameraGame').classList.add('active');
                 titleEl.textContent = '📷 Kamera';
                 subtitleEl.textContent = 'Tag et billede og lær dansk!';
+                break;
+
+            case 'piano':
+                document.getElementById('pianoGame').classList.add('active');
+                titleEl.textContent = '🎹 Piano';
+                subtitleEl.textContent = 'Spil piano og lær melodier!';
                 break;
 
             default:
