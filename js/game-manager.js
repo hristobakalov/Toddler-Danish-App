@@ -14,6 +14,7 @@ import { TemperatureGame } from './games/temperature-game.js';
 import { FlowerGame } from './games/flower-game.js';
 import { CameraGame } from './games/camera-game.js';
 import { PianoGame } from './games/piano-game.js';
+import { SpeechGame } from './games/speech-game.js';
 
 export class GameManager {
     constructor() {
@@ -33,7 +34,8 @@ export class GameManager {
             temperature: null,
             flower: null,
             camera: null,
-            piano: null
+            piano: null,
+            speech: null
         };
         this.currentGame = 'alphabet';
     }
@@ -87,6 +89,9 @@ export class GameManager {
 
         this.games.piano = new PianoGame('pianoGame');
         this.games.piano.init();
+
+        this.games.speech = new SpeechGame('speechGame');
+        this.games.speech.init();
 
         // Setup navigation
         this.setupIntroScreen();
@@ -215,6 +220,12 @@ export class GameManager {
                 document.getElementById('pianoGame').classList.add('active');
                 titleEl.textContent = '🎹 Piano';
                 subtitleEl.textContent = 'Spil piano og lær melodier!';
+                break;
+
+            case 'speech':
+                document.getElementById('speechGame').classList.add('active');
+                titleEl.textContent = '🎤 Bulgarsk til Dansk';
+                subtitleEl.textContent = 'Tal bulgarsk og lær dansk!';
                 break;
 
             default:
