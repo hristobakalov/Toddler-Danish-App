@@ -25,17 +25,23 @@ export class SpeechGame {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
         if (!SpeechRecognition) {
-            console.error('Speech recognition not supported in this browser');
+            console.error('❌ Speech recognition not supported in this browser');
+            console.error('Browser:', navigator.userAgent);
             return;
         }
 
+        console.log('✅ Speech recognition supported');
+
         this.recognition = new SpeechRecognition();
         this.recognition.lang = speechConfig.sourceLanguage;
-        this.recognition.continuous = speechConfig.recognition.continuous;
-        this.recognition.interimResults = speechConfig.recognition.interimResults;
+        this.recognition.continuous = false; // Stop after one result
+        this.recognition.interimResults = false;
         this.recognition.maxAlternatives = speechConfig.recognition.maxAlternatives;
 
+        console.log('Speech recognition configured for:', speechConfig.sourceLanguage);
+
         this.recognition.onstart = () => {
+            console.log('🎤 Speech recognition started');
             this.isListening = true;
             this.showListeningState();
         };
@@ -45,17 +51,24 @@ export class SpeechGame {
             const transcript = result.transcript;
             const confidence = result.confidence;
 
-            console.log(`Recognized (${Math.round(confidence * 100)}%): ${transcript}`);
+            console.log(`✅ Recognized (${Math.round(confidence * 100)}%): ${transcript}`);
             this.handleRecognizedSpeech(transcript);
         };
 
         this.recognition.onerror = (event) => {
-            console.error('Speech recognition error:', event.error);
+            console.error('❌ Speech recognition error:', event.error);
+            console.error('Error details:', event);
             this.isListening = false;
-            this.showError(`Fejl: ${this.getErrorMessage(event.error)}`);
+            this.hideListeningState();
+
+            // Don't show error for "no-speech" - user just didn't say anything
+            if (event.error !== 'no-speech' && event.error !== 'aborted') {
+                this.showError(`Fejl: ${this.getErrorMessage(event.error)}`);
+            }
         };
 
         this.recognition.onend = () => {
+            console.log('🛑 Speech recognition ended');
             this.isListening = false;
             this.hideListeningState();
         };
@@ -70,7 +83,39 @@ export class SpeechGame {
         const backFromHistoryBtn = document.getElementById('backFromHistoryBtn');
 
         if (listenBtn) {
-            listenBtn.addEventListener('click', () => this.startListening());
+            // Hold to speak functionality
+            listenBtn.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                this.startListening();
+            });
+
+            listenBtn.addEventListener('mouseup', (e) => {
+                e.preventDefault();
+                this.stopListening();
+            });
+
+            listenBtn.addEventListener('mouseleave', (e) => {
+                if (this.isListening) {
+                    this.stopListening();
+                }
+            });
+
+            // Touch events for mobile
+            listenBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.startListening();
+            });
+
+            listenBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.stopListening();
+            });
+
+            listenBtn.addEventListener('touchcancel', (e) => {
+                if (this.isListening) {
+                    this.stopListening();
+                }
+            });
         }
 
         if (playDanishBtn) {
@@ -116,18 +161,46 @@ export class SpeechGame {
 
     startListening() {
         if (!this.recognition) {
+            console.error('❌ Recognition not initialized');
             alert('Talegenkendelses funktionalitet er ikke tilgængelig i denne browser.');
             return;
         }
 
         if (this.isListening) {
+            console.log('⚠️ Already listening, ignoring start request');
             return;
         }
 
         try {
+            console.log('🎤 Starting speech recognition...');
             this.recognition.start();
         } catch (error) {
-            console.error('Error starting recognition:', error);
+            console.error('❌ Error starting recognition:', error);
+            if (error.message && error.message.includes('already started')) {
+                // Recognition already running, stop and restart
+                this.recognition.stop();
+                setTimeout(() => {
+                    this.recognition.start();
+                }, 100);
+            }
+        }
+    }
+
+    stopListening() {
+        if (!this.recognition) {
+            return;
+        }
+
+        if (!this.isListening) {
+            console.log('⚠️ Not listening, ignoring stop request');
+            return;
+        }
+
+        try {
+            console.log('🛑 Stopping speech recognition...');
+            this.recognition.stop();
+        } catch (error) {
+            console.error('❌ Error stopping recognition:', error);
         }
     }
 
@@ -137,7 +210,7 @@ export class SpeechGame {
 
         if (listenBtn) {
             listenBtn.classList.add('listening');
-            listenBtn.textContent = '🎤 Lytter...';
+            listenBtn.innerHTML = '🎤';
         }
 
         if (statusText) {
@@ -152,7 +225,7 @@ export class SpeechGame {
 
         if (listenBtn) {
             listenBtn.classList.remove('listening');
-            listenBtn.textContent = '🎤 Говори на български';
+            listenBtn.innerHTML = '🎤';
         }
 
         if (statusText) {
@@ -220,9 +293,12 @@ export class SpeechGame {
             const apiKey = window.GOOGLE_TRANSLATION_API_KEY;
 
             if (!apiKey) {
-                console.warn('Google Translate API key not found');
+                console.error('❌ Google Translate API key not found');
+                console.error('Please set window.GOOGLE_TRANSLATION_API_KEY in config.js');
                 return null;
             }
+
+            console.log('🌐 Translating to Danish:', bulgarianText);
 
             const response = await fetch(`${speechConfig.translateApiUrl}?key=${apiKey}`, {
                 method: 'POST',
@@ -238,19 +314,26 @@ export class SpeechGame {
             });
 
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ Translation API failed:', response.status);
+                console.error('Error response:', errorText);
                 throw new Error(`Translation API failed: ${response.status}`);
             }
 
             const data = await response.json();
+            console.log('Translation API response:', data);
 
             if (data.data && data.data.translations && data.data.translations[0]) {
-                return data.data.translations[0].translatedText;
+                const translated = data.data.translations[0].translatedText;
+                console.log('✅ Translated:', bulgarianText, '→', translated);
+                return translated;
             }
 
+            console.error('❌ Unexpected translation response format:', data);
             return null;
 
         } catch (error) {
-            console.error('Error translating text:', error);
+            console.error('❌ Error translating text:', error);
             return null;
         }
     }
@@ -294,11 +377,13 @@ export class SpeechGame {
         const modelId = window.ELEVENLABS_MODEL_ID;
 
         if (!apiKey || !voiceId) {
-            console.warn('ElevenLabs API credentials not found');
+            console.warn('⚠️ ElevenLabs API credentials not found, using fallback TTS');
+            console.warn('To use ElevenLabs, set window.ELEVENLABS_API_KEY and window.ELEVENLABS_VOICE_ID in config.js');
             return null;
         }
 
         try {
+            console.log('🎙️ Generating ElevenLabs audio for:', text);
             const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
 
             const response = await fetch(url, {
@@ -321,11 +406,15 @@ export class SpeechGame {
             });
 
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ ElevenLabs API failed:', response.status);
+                console.error('Error response:', errorText);
                 throw new Error(`ElevenLabs API failed: ${response.status}`);
             }
 
             // Get audio as blob
             const audioBlob = await response.blob();
+            console.log('✅ ElevenLabs audio generated successfully');
 
             // Convert to base64 for caching
             const base64Audio = await this.blobToBase64(audioBlob);
@@ -333,7 +422,7 @@ export class SpeechGame {
             return base64Audio;
 
         } catch (error) {
-            console.error('Error generating ElevenLabs audio:', error);
+            console.error('❌ Error generating ElevenLabs audio:', error);
             return null;
         }
     }
