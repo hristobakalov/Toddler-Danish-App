@@ -267,7 +267,7 @@ export class SpeechGame {
             // Convert to format ElevenLabs accepts
             const formData = new FormData();
             formData.append('file', audioBlob, 'recording.webm');
-            formData.append('model_id', 'eleven_multilingual_v2');
+            formData.append('model_id', 'scribe_v2'); // Using scribe_v2 model for STT
             formData.append('language_code', 'bg'); // Bulgarian language code
 
             const response = await fetch('https://api.elevenlabs.io/v1/speech-to-text', {
