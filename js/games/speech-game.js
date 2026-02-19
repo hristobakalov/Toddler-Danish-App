@@ -27,10 +27,20 @@ export class SpeechGame {
         if (!SpeechRecognition) {
             console.error('❌ Speech recognition not supported in this browser');
             console.error('Browser:', navigator.userAgent);
+            console.error('User agent:', navigator.userAgent);
+
+            // Check if it's iOS Safari
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+
+            if (isIOS || isSafari) {
+                console.error('⚠️ iOS/Safari detected - Speech recognition may not be supported');
+            }
             return;
         }
 
         console.log('✅ Speech recognition supported');
+        console.log('User agent:', navigator.userAgent);
 
         this.recognition = new SpeechRecognition();
         this.recognition.lang = speechConfig.sourceLanguage;
@@ -58,13 +68,30 @@ export class SpeechGame {
         this.recognition.onerror = (event) => {
             console.error('❌ Speech recognition error:', event.error);
             console.error('Error details:', event);
+            console.error('Error message:', event.message);
             this.isListening = false;
             this.hideListeningState();
 
-            // Don't show error for "no-speech" - user just didn't say anything
-            if (event.error !== 'no-speech' && event.error !== 'aborted') {
-                this.showError(`Fejl: ${this.getErrorMessage(event.error)}`);
+            // Don't show error for common non-critical errors
+            if (event.error === 'no-speech' || event.error === 'aborted') {
+                console.log('ℹ️ No speech detected or aborted, no error shown');
+                return;
             }
+
+            // For audio-capture errors on mobile, show specific message
+            if (event.error === 'audio-capture') {
+                this.showError('Kunne ikke få adgang til mikrofon. Giv tilladelse i browser indstillinger.');
+                return;
+            }
+
+            // For not-allowed errors
+            if (event.error === 'not-allowed') {
+                this.showError('Mikrofon adgang nægtet. Tillad mikrofon i browser indstillinger.');
+                return;
+            }
+
+            // Show generic error with error type
+            this.showError(`Fejl: ${this.getErrorMessage(event.error)} (${event.error})`);
         };
 
         this.recognition.onend = () => {
@@ -159,10 +186,10 @@ export class SpeechGame {
         this.renderHistory();
     }
 
-    startListening() {
+    async startListening() {
         if (!this.recognition) {
             console.error('❌ Recognition not initialized');
-            alert('Talegenkendelses funktionalitet er ikke tilgængelig i denne browser.');
+            alert('Talegenkendelses funktionalitet er ikke tilgængelig i denne browser.\n\nNote: Speech recognition may not work on iOS/Safari.');
             return;
         }
 
@@ -171,11 +198,31 @@ export class SpeechGame {
             return;
         }
 
+        // Check microphone permission on modern browsers
+        if (navigator.permissions && navigator.permissions.query) {
+            try {
+                const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+                console.log('🎤 Microphone permission:', permissionStatus.state);
+
+                if (permissionStatus.state === 'denied') {
+                    console.error('❌ Microphone permission denied');
+                    alert('Mikrofon adgang nægtet. Tillad mikrofon i browser indstillinger.');
+                    return;
+                }
+            } catch (error) {
+                console.log('ℹ️ Could not check microphone permission:', error.message);
+                // Continue anyway - permission API might not be supported
+            }
+        }
+
         try {
             console.log('🎤 Starting speech recognition...');
             this.recognition.start();
         } catch (error) {
             console.error('❌ Error starting recognition:', error);
+            console.error('Error name:', error.name);
+            console.error('Error message:', error.message);
+
             if (error.message && error.message.includes('already started')) {
                 // Recognition already running, stop and restart
                 this.recognition.stop();
@@ -280,12 +327,14 @@ export class SpeechGame {
         const loadingSpinner = document.getElementById('speechLoadingSpinner');
         const playBtn = document.getElementById('playDanishBtn');
         const saveBtn = document.getElementById('savePhraseBtn');
+        const newBtn = document.getElementById('newPhraseBtn');
 
         if (bulgarianDisplay) bulgarianDisplay.textContent = bulgarianText;
         if (danishDisplay) danishDisplay.textContent = danishText;
         if (loadingSpinner) loadingSpinner.style.display = 'none';
         if (playBtn) playBtn.style.display = 'block';
         if (saveBtn) saveBtn.style.display = 'block';
+        if (newBtn) newBtn.style.display = 'block';
     }
 
     async translateToDanish(bulgarianText) {
@@ -597,9 +646,11 @@ export class SpeechGame {
 
         const playBtn = document.getElementById('playDanishBtn');
         const saveBtn = document.getElementById('savePhraseBtn');
+        const newBtn = document.getElementById('newPhraseBtn');
 
         if (playBtn) playBtn.style.display = 'none';
         if (saveBtn) saveBtn.style.display = 'none';
+        if (newBtn) newBtn.style.display = 'none';
     }
 
     resetToMain() {
@@ -624,10 +675,13 @@ export class SpeechGame {
             'audio-capture': 'Kunne ikke få adgang til mikrofon',
             'not-allowed': 'Mikrofon adgang nægtet',
             'network': 'Netværksfejl',
-            'aborted': 'Talegenkendelses afbrudt'
+            'aborted': 'Talegenkendelses afbrudt',
+            'service-not-allowed': 'Tjeneste ikke tilladt',
+            'bad-grammar': 'Grammatikfejl',
+            'language-not-supported': 'Sprog ikke understøttet'
         };
 
-        return errorMessages[errorType] || 'Ukendt fejl';
+        return errorMessages[errorType] || `Ukendt fejl: ${errorType}`;
     }
 
     destroy() {

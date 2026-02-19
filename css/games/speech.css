@@ -66,6 +66,10 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .speech-listen-btn:hover {
@@ -80,6 +84,8 @@
 .speech-listen-btn.listening {
     animation: pulse 1.5s ease-in-out infinite;
     background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
+    box-shadow: 0 8px 30px rgba(255, 65, 108, 0.6),
+                0 0 50px rgba(255, 65, 108, 0.4);
 }
 
 @keyframes pulse {
