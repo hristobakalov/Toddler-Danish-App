@@ -264,11 +264,11 @@ export class SpeechGame {
         try {
             console.log('🎙️ Transcribing audio with ElevenLabs...');
 
-            // Convert to format ElevenLabs accepts (mp3 or other)
+            // Convert to format ElevenLabs accepts
             const formData = new FormData();
-            formData.append('audio', audioBlob, 'recording.webm');
+            formData.append('file', audioBlob, 'recording.webm');
             formData.append('model_id', 'eleven_multilingual_v2');
-            formData.append('language', 'bg'); // Bulgarian
+            formData.append('language_code', 'bg'); // Bulgarian language code
 
             const response = await fetch('https://api.elevenlabs.io/v1/speech-to-text', {
                 method: 'POST',
