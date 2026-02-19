@@ -4,101 +4,74 @@ import { CacheManager } from '../utils/cache-manager.js';
 export class SpeechGame {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
-        this.recognition = null;
-        this.isListening = false;
+        this.mediaRecorder = null;
+        this.audioChunks = [];
+        this.isRecording = false;
         this.currentBulgarianText = '';
         this.currentDanishText = '';
         this.audioElement = null;
         this.cacheManager = new CacheManager();
         this.savedPhrases = this.loadSavedPhrases();
+        this.stream = null;
     }
 
     init() {
-        this.setupSpeechRecognition();
+        console.log('✅ Using ElevenLabs Speech-to-Text API');
+        console.log('✅ Works on all devices including iOS!');
+
         this.setupControls();
         this.showMainScreen();
         this.renderHistory();
     }
 
-    setupSpeechRecognition() {
-        // Check if browser supports speech recognition
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    async setupMediaRecorder() {
+        try {
+            // Request microphone access
+            this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            console.log('✅ Microphone access granted');
 
-        if (!SpeechRecognition) {
-            console.error('❌ Speech recognition not supported in this browser');
-            console.error('Browser:', navigator.userAgent);
-            console.error('User agent:', navigator.userAgent);
+            // Create MediaRecorder with compatible format
+            const mimeType = this.getSupportedMimeType();
+            console.log('Using MIME type:', mimeType);
 
-            // Check if it's iOS Safari
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+            this.mediaRecorder = new MediaRecorder(this.stream, { mimeType });
 
-            if (isIOS || isSafari) {
-                console.error('⚠️ iOS/Safari detected - Speech recognition may not be supported');
+            this.mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    this.audioChunks.push(event.data);
+                }
+            };
+
+            this.mediaRecorder.onstop = async () => {
+                console.log('🎤 Recording stopped, processing audio...');
+                await this.processRecording();
+            };
+
+            return true;
+        } catch (error) {
+            console.error('❌ Error accessing microphone:', error);
+            alert('Kunne ikke få adgang til mikrofon. Giv venligst tilladelse.');
+            return false;
+        }
+    }
+
+    getSupportedMimeType() {
+        // Check supported formats in order of preference
+        const types = [
+            'audio/webm;codecs=opus',
+            'audio/webm',
+            'audio/ogg;codecs=opus',
+            'audio/mp4',
+            'audio/mpeg'
+        ];
+
+        for (const type of types) {
+            if (MediaRecorder.isTypeSupported(type)) {
+                return type;
             }
-            return;
         }
 
-        console.log('✅ Speech recognition supported');
-        console.log('User agent:', navigator.userAgent);
-
-        this.recognition = new SpeechRecognition();
-        this.recognition.lang = speechConfig.sourceLanguage;
-        this.recognition.continuous = false; // Stop after one result
-        this.recognition.interimResults = false;
-        this.recognition.maxAlternatives = speechConfig.recognition.maxAlternatives;
-
-        console.log('Speech recognition configured for:', speechConfig.sourceLanguage);
-
-        this.recognition.onstart = () => {
-            console.log('🎤 Speech recognition started');
-            this.isListening = true;
-            this.showListeningState();
-        };
-
-        this.recognition.onresult = (event) => {
-            const result = event.results[0][0];
-            const transcript = result.transcript;
-            const confidence = result.confidence;
-
-            console.log(`✅ Recognized (${Math.round(confidence * 100)}%): ${transcript}`);
-            this.handleRecognizedSpeech(transcript);
-        };
-
-        this.recognition.onerror = (event) => {
-            console.error('❌ Speech recognition error:', event.error);
-            console.error('Error details:', event);
-            console.error('Error message:', event.message);
-            this.isListening = false;
-            this.hideListeningState();
-
-            // Don't show error for common non-critical errors
-            if (event.error === 'no-speech' || event.error === 'aborted') {
-                console.log('ℹ️ No speech detected or aborted, no error shown');
-                return;
-            }
-
-            // For audio-capture errors on mobile, show specific message
-            if (event.error === 'audio-capture') {
-                this.showError('Kunne ikke få adgang til mikrofon. Giv tilladelse i browser indstillinger.');
-                return;
-            }
-
-            // For not-allowed errors
-            if (event.error === 'not-allowed') {
-                this.showError('Mikrofon adgang nægtet. Tillad mikrofon i browser indstillinger.');
-                return;
-            }
-
-            // Show generic error with error type
-            this.showError(`Fejl: ${this.getErrorMessage(event.error)} (${event.error})`);
-        };
-
-        this.recognition.onend = () => {
-            console.log('🛑 Speech recognition ended');
-            this.isListening = false;
-            this.hideListeningState();
-        };
+        return ''; // Use default
     }
 
     setupControls() {
@@ -187,67 +160,145 @@ export class SpeechGame {
     }
 
     async startListening() {
-        if (!this.recognition) {
-            console.error('❌ Recognition not initialized');
-            alert('Talegenkendelses funktionalitet er ikke tilgængelig i denne browser.\n\nNote: Speech recognition may not work on iOS/Safari.');
+        if (this.isRecording) {
+            console.log('⚠️ Already recording, ignoring start request');
             return;
         }
 
-        if (this.isListening) {
-            console.log('⚠️ Already listening, ignoring start request');
-            return;
-        }
-
-        // Check microphone permission on modern browsers
-        if (navigator.permissions && navigator.permissions.query) {
-            try {
-                const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
-                console.log('🎤 Microphone permission:', permissionStatus.state);
-
-                if (permissionStatus.state === 'denied') {
-                    console.error('❌ Microphone permission denied');
-                    alert('Mikrofon adgang nægtet. Tillad mikrofon i browser indstillinger.');
-                    return;
-                }
-            } catch (error) {
-                console.log('ℹ️ Could not check microphone permission:', error.message);
-                // Continue anyway - permission API might not be supported
-            }
+        // Setup MediaRecorder if not already set up
+        if (!this.mediaRecorder) {
+            const success = await this.setupMediaRecorder();
+            if (!success) return;
         }
 
         try {
-            console.log('🎤 Starting speech recognition...');
-            this.recognition.start();
-        } catch (error) {
-            console.error('❌ Error starting recognition:', error);
-            console.error('Error name:', error.name);
-            console.error('Error message:', error.message);
+            this.audioChunks = [];
+            this.isRecording = true;
+            console.log('🎤 Starting recording...');
 
-            if (error.message && error.message.includes('already started')) {
-                // Recognition already running, stop and restart
-                this.recognition.stop();
-                setTimeout(() => {
-                    this.recognition.start();
-                }, 100);
-            }
+            this.mediaRecorder.start();
+            this.showListeningState();
+
+        } catch (error) {
+            console.error('❌ Error starting recording:', error);
+            this.isRecording = false;
+            this.hideListeningState();
+            alert('Kunne ikke starte optagelse. Prøv igen.');
         }
     }
 
     stopListening() {
-        if (!this.recognition) {
-            return;
-        }
-
-        if (!this.isListening) {
-            console.log('⚠️ Not listening, ignoring stop request');
+        if (!this.isRecording || !this.mediaRecorder) {
+            console.log('⚠️ Not recording, ignoring stop request');
             return;
         }
 
         try {
-            console.log('🛑 Stopping speech recognition...');
-            this.recognition.stop();
+            console.log('🛑 Stopping recording...');
+            this.mediaRecorder.stop();
+            this.isRecording = false;
+            this.hideListeningState();
+
         } catch (error) {
-            console.error('❌ Error stopping recognition:', error);
+            console.error('❌ Error stopping recording:', error);
+            this.isRecording = false;
+            this.hideListeningState();
+        }
+    }
+
+    async processRecording() {
+        if (this.audioChunks.length === 0) {
+            console.error('❌ No audio data recorded');
+            this.showError('Ingen lyd blev optaget. Prøv igen.');
+            return;
+        }
+
+        // Show processing state
+        this.showProcessing();
+
+        try {
+            // Create blob from recorded chunks
+            const audioBlob = new Blob(this.audioChunks, { type: this.mediaRecorder.mimeType });
+            console.log('Audio blob size:', audioBlob.size, 'bytes');
+
+            // Convert to Bulgarian text using ElevenLabs
+            const bulgarianText = await this.transcribeAudio(audioBlob);
+
+            if (!bulgarianText) {
+                this.showError('Kunne ikke genkende tale. Prøv igen.');
+                return;
+            }
+
+            this.currentBulgarianText = bulgarianText;
+
+            // Translate to Danish
+            const danishText = await this.translateToDanish(bulgarianText);
+
+            if (!danishText) {
+                this.showError('Kunne ikke oversætte. Prøv igen!');
+                return;
+            }
+
+            this.currentDanishText = danishText;
+
+            // Show result
+            this.displayTranslation(bulgarianText, danishText);
+
+            // Generate and play Danish audio
+            await this.generateAndPlayDanishAudio(danishText);
+
+        } catch (error) {
+            console.error('❌ Error processing recording:', error);
+            this.showError('Der opstod en fejl. Prøv igen!');
+        }
+    }
+
+    async transcribeAudio(audioBlob) {
+        const apiKey = window.ELEVENLABS_API_KEY;
+
+        if (!apiKey) {
+            console.error('❌ ElevenLabs API key not found');
+            return null;
+        }
+
+        try {
+            console.log('🎙️ Transcribing audio with ElevenLabs...');
+
+            // Convert to format ElevenLabs accepts (mp3 or other)
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.webm');
+            formData.append('model_id', 'eleven_multilingual_v2');
+            formData.append('language', 'bg'); // Bulgarian
+
+            const response = await fetch('https://api.elevenlabs.io/v1/speech-to-text', {
+                method: 'POST',
+                headers: {
+                    'xi-api-key': apiKey
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ ElevenLabs STT failed:', response.status);
+                console.error('Error response:', errorText);
+                throw new Error(`ElevenLabs STT failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('ElevenLabs STT response:', data);
+
+            if (data.text) {
+                console.log('✅ Transcribed:', data.text);
+                return data.text;
+            }
+
+            console.error('❌ No text in response');
+            return null;
+
+        } catch (error) {
+            console.error('❌ Error transcribing audio:', error);
+            return null;
         }
     }
 
@@ -277,35 +328,6 @@ export class SpeechGame {
 
         if (statusText) {
             statusText.style.display = 'none';
-        }
-    }
-
-    async handleRecognizedSpeech(bulgarianText) {
-        this.currentBulgarianText = bulgarianText;
-
-        // Show processing state
-        this.showProcessing();
-
-        try {
-            // Translate to Danish
-            const danishText = await this.translateToDanish(bulgarianText);
-
-            if (!danishText) {
-                this.showError('Kunne ikke oversætte. Prøv igen!');
-                return;
-            }
-
-            this.currentDanishText = danishText;
-
-            // Show result
-            this.displayTranslation(bulgarianText, danishText);
-
-            // Generate and play Danish audio
-            await this.generateAndPlayDanishAudio(danishText);
-
-        } catch (error) {
-            console.error('Error processing speech:', error);
-            this.showError('Der opstod en fejl. Prøv igen!');
         }
     }
 
@@ -685,8 +707,15 @@ export class SpeechGame {
     }
 
     destroy() {
-        if (this.recognition) {
-            this.recognition.stop();
+        // Stop recording if active
+        if (this.isRecording && this.mediaRecorder) {
+            this.mediaRecorder.stop();
+        }
+
+        // Stop media stream
+        if (this.stream) {
+            this.stream.getTracks().forEach(track => track.stop());
+            this.stream = null;
         }
 
         if (this.audioElement) {
